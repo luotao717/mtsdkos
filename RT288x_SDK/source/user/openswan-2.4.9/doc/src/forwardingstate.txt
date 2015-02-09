@@ -1,0 +1,35 @@
+
+ 
+      .--------------. 	 
+      | non-existant |
+      |    policy    |
+      `--------------'
+             |        
+             | PF_ACQUIRE
+             |           
+             |<---------.
+             V          | new packet
+      .--------------.  | (maybe resend PF_ACQUIRE)
+      |  hold policy |--'                          
+      |              |--.                          
+      `--------------'   \  pass                   
+         |        |       \ msg    .---------.     
+         |        |        \       V         | forward
+         |        |         .-------------.  | packet 
+  create |        |         | pass policy |--'       
+  IPsec  |        |         `-------------'          
+  SA     |        |                                  
+         |         \                                 
+         |          \                                
+         V           \ 	deny                         
+   .---------.        \ msg                          
+   | encrypt |         \                             
+   | policy  |          \         ,---------.        
+   `---------'           \        |         | discard
+                          \       V         | packet 
+                           .-------------.  |        
+                           | deny policy |--'        
+                           '-------------'          
+                                                   
+    
+$Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/openswan-2.4.9/doc/src/forwardingstate.txt#1 $

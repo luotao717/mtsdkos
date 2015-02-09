@@ -1,0 +1,43 @@
+#!/bin/sh
+# $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/openswan-2.6.22/testing/pluto/ikev2-04-basic-x509/east-racoon2/init.d/iked#1 $
+# iked startup script
+#
+
+prefix=/usr/local/racoon2
+exec_prefix=${prefix}
+
+NAME=iked
+DAEMON=${exec_prefix}/sbin/$NAME
+PIDFILE=/var/run/$NAME.pid
+
+test -x $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+start)
+	echo -n "Starting $NAME"
+	$DAEMON -F -D 7 -v &
+	echo "."
+	;;
+stop)
+	echo -n "Stopping $NAME"
+	read pid junk < $PIDFILE && kill $pid
+	echo "."
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+reload)
+	echo -n "Reloading $NAME"
+	read pid junk < $PIDFILE && kill -HUP $pid
+	echo "."
+	;;
+*)
+	echo "usage: $0 {start|stop|restart|reload}"
+	exit 1
+	;;
+esac
+
+exit 0

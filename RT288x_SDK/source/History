@@ -1,0 +1,43 @@
+Mediatek APSoC SDK - History
+
+Version 4.3.0.0
+===============
+
+PLATFORM:
+
+- Support MT7628/MT7621/MT7620 [linux-2.6.36.x]
+- Support RT6855/RT6856 [linux-2.6.36MT.x]
+- Support RT3052/RT3883/RT3352/RT5350 [linux-2.6.21.x]
+
+NEW FUNCTIONS:
+
+- [APP] Support MT7628 long-loop detection to extend maximum Ethernet cable length
+- [APP] supports linux 3.10 CFG80211 hostapd for MT76x2E/MT7620
+- [APP] Support miniDLNA
+- [APP]Display the OS information of device
+- [APP] Support Auto-Wan detection
+- [IPSec] Add SHA256 support for MT7621 and RT6856 HW IPSec
+- [APP] Add MT7620 NAND ECC tool
+- [I2S] Add Pause/Resume/Stop functions of TX and RX
+- [I2S] Add TX+RX work simultaneously
+- [I2S] Add MT7621 REFCLK support for 12MHz/12.288MHz/11.289MHz
+- VOIP support
+- TR069 support
+
+IMPROVEMENT:
+
+- [SW] MT7621 GE2 to external Switch
+- [PPTP/L2TP] Increase stability for MT7620/MT7621 PPTP/L2TP fast path 
+- [SW] MT7621 switch support IGMP proxy
+- [HNAT] Add ac counter maintainer to get statistic counter periodically for MT7620/MT7621
+- [USB] Support MT7621/MT7628/MT7620 USB firmware upgrade mechanism in Uboot
+- [SDXC] Implement card detect with software polling
+
+BUG FIXED:
+
+- [RAETH] Fix ifconfig mtu down/up issue in SMP Linux
+- [RAETH] Fix RPS cannot work properly in vlan mode
+- [LIB] Fix C library header file path for uClibc-0.9.33 (ntfs-3g issue)
+- [NAND] MT7620/MT7621 support UBIFS without BMT mechanism
+- [NAND] MT7621 HW design for 2048/112 NAND flash
+

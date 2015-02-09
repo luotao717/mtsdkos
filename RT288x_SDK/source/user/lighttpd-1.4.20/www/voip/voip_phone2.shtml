@@ -1,0 +1,364 @@
+<!-- Copyright 2004, Ralink Technology Corporation All Rights Reserved. -->
+<html>
+<head>
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="/style/normal_ws.css" type="text/css">
+<title>Local Area Network (LAN) Settings</title>
+</head>
+
+<script type="text/javascript" src="/shareFun.js"></script>
+<script language="JavaScript" type="text/javascript">
+	
+
+var provision_enable2 = "<!--#exec cmd="web config2 nvram SC_AUTO_PROV_ENABLE"-->";
+
+var vogain_tx2 = "<!--#exec cmd="web config2 nvram SC_LINE_2_VOGAIN_TX_LV"-->";
+var vogain_rx2 = "<!--#exec cmd="web config2 nvram SC_LINE_2_VOGAIN_RX_LV"-->";
+var ring_impedance2 = "<!--#exec cmd="web config2 nvram SC_LINE_2_RING_IMPEDENCE"-->";
+var caller_id_type2 = "<!--#exec cmd="web config2 nvram SC_LINE_2_CALLER_ID_TYPE"-->";
+var caller_id_display2 = "<!--#exec cmd="web config2 nvram SC_LINE_2_CALLER_ID_DISP"-->";
+
+var caller_id_pwr2 = "<!--#exec cmd="web config2 nvram SC_LINE_2_CALLER_ID_PWR"-->";
+function checkValue(val)
+{
+	var f = document.forms[0];	
+
+	document.voip_status.page.value = val;
+
+	if (val == 0) // connect
+	{
+		//document.nfc_operation.NFC_Disable.disabled = false;
+		//document.nfc_operation.NFC_Enable.disabled = true;
+		document.voip_status.connect_status.value = 0;
+	}
+	else if (val == 1) // disconnect
+	{
+		//document.nfc_operation.NFC_Disable.disabled = true;
+		//document.nfc_operation.NFC_Enable.disabled = false;
+		document.voip_status.connect_status.value = 1;
+	}
+
+	//f.submit();
+
+	//setTimeout('window.close()', 1000);
+
+	return true;
+}	
+function initValue()
+{
+  
+  	if(vogain_tx2 == "0"){
+			document.voip_phone2.voice_tx_level2.options.selectedIndex = 0;
+		}else if(vogain_tx2 == "1"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 1;
+    }else if(vogain_tx2 == "2"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 2;
+    }else if(vogain_tx2 == "3"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 3;
+    }else if(vogain_tx2 == "4"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 4;
+    }else if(vogain_tx2 == "5"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 5;
+    }else if(provision_enable2 == "6"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 6;
+    }else if(vogain_tx2 == "7"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 7;
+    }else if(vogain_tx2 == "8"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 8;
+    }else if(vogain_tx2 == "9"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 9;
+    }else if(vogain_tx2 == "10"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 10;
+    }else if(vogain_tx2 == "11"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 11;
+    }else if(vogain_tx2 == "12"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 12;
+    }else if(vogain_tx2 == "13"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 13;
+    }else if(vogain_tx2 == "14"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 14;
+    }else if(vogain_tx2 == "15"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 15;
+    }else if(vogain_tx2 == "16"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 16;
+    }else if(vogain_tx2 == "17"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 17;
+    }else if(vogain_tx2 == "18"){
+    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 18;
+    }                                     
+ 
+  	if(vogain_rx2 == "0"){
+			document.voip_phone2.voice_rx_level2.options.selectedIndex = 0;
+		}else if(vogain_rx2 == "1"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 1;
+    }else if(vogain_rx2 == "2"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 2;
+    }else if(vogain_rx2 == "3"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 3;
+    }else if(vogain_rx2 == "4"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 4;
+    }else if(vogain_rx2 == "5"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 5;
+    }else if(vogain_rx2 == "6"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 6;
+    }else if(vogain_rx2 == "7"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 7;
+    }else if(vogain_rx2 == "8"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 8;
+    }else if(vogain_rx2 == "9"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 9;
+    }else if(vogain_rx2 == "10"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 10;
+    }else if(vogain_rx2 == "11"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 11;
+    }else if(vogain_rx2 == "12"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 12;
+    }else if(vogain_rx2 == "13"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 13;
+    }else if(vogain_rx2 == "14"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 14;
+    }else if(vogain_rx2 == "15"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 15;
+    }else if(vogain_rx2 == "16"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 16;
+    }else if(vogain_rx2 == "17"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 17;
+    }else if(vogain_rx2 == "18"){
+    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 18;
+    }   
+
+		if(ring_impedance2 == "1"){
+			document.voip_phone2.ring_impedance2.options.selectedIndex = 0;
+		}else if(ring_impedance2 == "2"){
+    	document.voip_phone2.ring_impedance2.options.selectedIndex = 1;
+    }else if(ring_impedance2 == "3"){
+    	document.voip_phone2.ring_impedance2.options.selectedIndex = 2;
+    }else if(ring_impedance2 == "4"){
+    	document.voip_phone2.ring_impedance2.options.selectedIndex = 3;
+    }else if(ring_impedance2 == "5"){
+    	document.voip_phone2.ring_impedance2.options.selectedIndex = 4;
+    }else if(ring_impedance2 == "6"){
+    	document.voip_phone2.ring_impedance2.options.selectedIndex = 5;
+    }else if(ring_impedance2 == "7"){
+    	document.voip_phone2.ring_impedance2.options.selectedIndex = 6;
+    }
+
+
+		if(caller_id_type2 == "1"){
+			document.voip_phone2.caller_id_type2.options.selectedIndex = 0;
+		}else if(caller_id_type2 == "2"){
+    	document.voip_phone2.caller_id_type2.options.selectedIndex = 1;
+    }else if(caller_id_type2 == "3"){
+    	document.voip_phone2.caller_id_type2.options.selectedIndex = 2;
+    }else if(caller_id_type2 == "4"){
+    	document.voip_phone2.caller_id_type2.options.selectedIndex = 3;
+    }
+
+		if(caller_id_display2 == "1"){
+			document.voip_phone2.caller_id_display2.options.selectedIndex = 0;
+		}else if(caller_id_display2 == "2"){
+    	document.voip_phone2.caller_id_display2.options.selectedIndex = 1;
+    }
+
+		if(caller_id_pwr2 == "1"){
+			document.voip_phone2.caller_id_pwr2.options.selectedIndex = 0;
+		}else if(caller_id_pwr2 == "2"){
+    	document.voip_phone2.caller_id_pwr2.options.selectedIndex = 1;
+    }else if(caller_id_pwr2 == "3"){
+    	document.voip_phone2.caller_id_pwr2.options.selectedIndex = 2;
+    }else if(caller_id_pwr2 == "4"){
+    	document.voip_phone2.caller_id_pwr2.options.selectedIndex = 3;
+    }
+
+
+}
+
+
+
+
+</script>
+
+<body onLoad="initValue()">
+<table class="body"><tr><td>
+
+<h1 id="lTitle">VoIP Phone</h1>
+<p id="lIntroduction"></p>
+<hr />
+
+<form method=post name="voip_phone2" action="/cgi-bin/voip.cgi" onSubmit="return CheckValue()">
+<input type=hidden name=page value=voip_phone2>
+<table width="95%" border="1" cellpadding="2" cellspacing="1">
+	
+
+
+
+<tr>
+  <td class="title" colspan="2" id="voip_provisionid">Phone</td>
+</tr>
+
+
+
+<tr>
+  <td class="head" id="flash_detectid">Hook Flash Detect Upper Bound</td>
+  <td><input name="flash_detect_up2" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_LINE_2_FLASH_DETECT_UP_LV"-->" ></td>
+</tr>
+<tr>
+  <td class="head" id="flash_detect_lvid">Hook Flash Detect Lower Bound</td>
+  <td><input name="flash_detect_lv2" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_LINE_2_FLASH_DETECT_DN_LV"-->" ></td>
+</tr>
+
+
+<tr>
+	<td class="head" id="voice_tx_levelid">
+		Voice Tx Level
+	</td>
+	<td>
+	<select name="voice_tx_level2" size="1">
+	<option value=0 id="0">-9</option>
+	<option value=1 id="1">-8</option>
+	<option value=2 id="2">-7</option>
+	<option value=3 id="3">-6</option>
+	<option value=4 id="4">-5</option>
+	<option value=5 id="5">-4</option>
+	<option value=6 id="6">-3</option>
+	<option value=7 id="7">-2</option>
+	<option value=8 id="8">-1</option>
+	<option value=9 id="9">0</option>
+	<option value=10 id="10">1</option>
+	<option value=11 id="11">2</option>
+	<option value=12 id="12">3</option>
+	<option value=13 id="13">4</option>
+	<option value=14 id="14">5</option>
+	<option value=15 id="15">6</option>
+	<option value=16 id="16">7</option>
+	<option value=17 id="17">8</option>	
+	<option value=18 id="18">9</option>	
+	</select>
+	</td>
+</tr>
+
+<tr>
+	<td class="head" id="voice_rx_levelid">
+		Voice Rx Level
+	</td>
+	<td>
+	<select name="voice_rx_level2" size="1">
+	<option value=0 id="0">-9</option>
+	<option value=1 id="1">-8</option>
+	<option value=2 id="2">-7</option>
+	<option value=3 id="3">-6</option>
+	<option value=4 id="4">-5</option>
+	<option value=5 id="5">-4</option>
+	<option value=6 id="6">-3</option>
+	<option value=7 id="7">-2</option>
+	<option value=8 id="8">-1</option>
+	<option value=9 id="9">0</option>
+	<option value=10 id="10">1</option>
+	<option value=11 id="11">2</option>
+	<option value=12 id="12">3</option>
+	<option value=13 id="13">4</option>
+	<option value=14 id="14">5</option>
+	<option value=15 id="15">6</option>
+	<option value=16 id="16">7</option>
+	<option value=17 id="17">8</option>	
+	<option value=18 id="18">9</option>	
+	</select>
+	</td>
+</tr>
+
+
+
+<tr>
+	<td class="head" id="ring_impedanceid">
+		Ring Impedance
+	</td>
+	<td>
+	<select name="ring_impedance2" size="1">
+	<option value=1 id="600">600ohms</option>
+	<option value=2 id="900">900ohms</option>
+	<option value=3 id="japan">Japan(600ohms + 1uF)</option>
+	<option value=4 id="900ohms_216">900ohms + 2.16uF</option>
+	<option value=5 id="ctr21">CTR21 270ohms + (750ohms||150nF)</option>	
+	<option value=6 id="Australia">Australia/New Zealand220ohms+(820ohms||120nF)</option>
+	<option value=7 id="Slovakia_820">Slovakia/Slovenia/South Africa220ohms+(820ohms||115nF)</option>
+	<option value=8 id="Slovakia_680">Slovakia/Slovenia/South Africa220ohms+(680ohms||100nF)</option>		
+	</select>
+	</td>
+</tr>
+
+<tr>
+  <td class="title" colspan="2" id="voip_provisionid">Caller ID</td>
+</tr>
+
+<tr>
+	<td class="head" id="caller_id_typeid">
+		Caller ID Type
+	</td>
+	<td>
+	<select name="caller_id_type2" size="1">
+	<option value=1 id="disable">Disable</option>
+	<option value=2 id="fsk_bellcore">FSK Bellcore</option>
+	<option value=3 id="japan_clip">Japan CLIP</option>
+	<option value=4 id="fsk_etsi">FSK ETSI</option>
+	</select>
+	</td>
+</tr>
+
+<tr>
+	<td class="head" id="caller_displayid">
+		Caller ID Display
+	</td>
+	<td>
+	<select name="caller_id_display2" size="1">
+	<option value=1 id="before_ring">Before Ring</option>
+	<option value=2 id="after_ring">After Ring</option>
+	</select>
+	</td>
+</tr>
+
+
+<tr>
+	<td class="head" id="caller_displayid">
+		Caller ID Power Level
+	</td>
+	<td>
+	<select name="caller_id_pwr2" size="1">
+	<option value=0 id="0">0</option>
+	<option value=1 id="1">1</option>
+	<option value=2 id="2">2</option>
+	<option value=3 id="3">3</option>	
+	</select>
+	</td>
+</tr>
+
+
+
+
+
+
+</table>
+
+
+<table width="95%" cellpadding="2" cellspacing="1">
+<tr align="center">
+  <td>
+    <input type=submit  name="Save" style="{width:120px;}" value="Save" id="Save" ;>&nbsp;&nbsp;
+    <input type=reset  name="Cancel" style="{width:120px;}" value="Cancel" id="Cancel" ;>
+  </td>
+
+</tr>
+
+</table>
+
+
+
+
+
+
+</form>
+
+</td></tr></table>
+</body>
+</html>
+

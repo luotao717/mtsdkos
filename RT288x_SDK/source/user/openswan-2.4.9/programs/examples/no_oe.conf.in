@@ -1,0 +1,21 @@
+# 'include' this file to disable Opportunistic Encryption.
+# See @FINALDOCDIR@/policygroups.html for details.
+#
+# RCSID $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/openswan-2.4.9/programs/examples/no_oe.conf.in#1 $
+conn block 
+    auto=ignore
+
+conn private 
+    auto=ignore
+
+conn private-or-clear 
+    auto=ignore
+
+conn clear-or-private 
+    auto=ignore
+
+conn clear 
+    auto=ignore
+
+conn packetdefault 
+    auto=ignore
