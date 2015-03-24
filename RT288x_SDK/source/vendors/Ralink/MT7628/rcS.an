@@ -4,7 +4,7 @@ mkdir -p /var/run
 makedevlinks.sh
 cat /etc_ro/motd > /dev/console
 nvram_daemon&
-long_loop&
+#long_loop&
 #goahead&
 init_system start
 

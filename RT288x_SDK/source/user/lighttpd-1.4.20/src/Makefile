@@ -769,11 +769,18 @@ MODULES = mod_access.so mod_accesslog.so mod_alias.so mod_auth.so mod_cgi.so \
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
+MOD_USED = mod_access.so mod_ssi.so mod_auth.so mod_cgi.so mod_indexfile.so mod_dirlisting.so mod_staticfile.so
+ifeq ($(CONFIG_USER_STORAGE), y)
+MOD_USED += mod_alias.so mod_compress.so mod_status.so mod_evhost.so mod_webdav.so mod_accesslog.so 
+endif
+
 romfs:
 	$(ROMFSINST) /bin/lighttpd
-	rm -rf lib; mkdir lib; cp .libs/*.so lib
+	rm -rf lib; mkdir lib
+	for i in $(MOD_USED); do \
+		cp .libs/$$i lib; \
+	done
 	$(ROMFSINST) lib /etc_ro/lighttpd/lib
-	FILES=`ls lib/*.so`; for i in $$FILES; do $(ROMFSINST) $$i /etc_ro/lighttpd/$$i; done
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj

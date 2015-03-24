@@ -10,7 +10,6 @@
 
 #define HASHTB_RET_SUCCESS (1)
 #define HASHTB_RET_FAIL		(0)
-
 typedef enum{
 	HASH_2_MEM = 0,
 	HASH_2_FLASH,
@@ -19,14 +18,16 @@ typedef enum{
 
 typedef int (*funcType1)(char *,char *);
 typedef char* (*funcType2)(char *);
-typedef int (*funcType3)(char **,int,int,int);
+typedef int (*funcType3)(char **,int,int);
 typedef int (*funcType4)(char **,int);
+typedef int (*funcType5)(void);
 
 typedef struct hashTb_funcSet_s{
 	funcType4 conf_init;
 	funcType2 conf_get;
 	funcType1 conf_set;
 	funcType3 conf_getall;
+	funcType5 conf_clear;
 }hashTb_funcSet_t;
 
 extern int hash_funcSet_reg(hashTb_funcSet_t *funcP);

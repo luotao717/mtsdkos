@@ -57,3 +57,15 @@ obj-$(CONFIG_MWIFIEX)	+= mwifiex/
 
 obj-$(CONFIG_BRCMFMAC)	+= brcm80211/
 obj-$(CONFIG_BRCMSMAC)	+= brcm80211/
+ifneq ($(CONFIG_RLT_AP_SUPPORT),)
+obj-$(CONFIG_RLT_AP_SUPPORT)       += rlt_wifi_ap/
+endif
+ifneq ($(CONFIG_RLT_STA_SUPPORT),)
+obj-$(CONFIG_RLT_STA_SUPPORT)      += rlt_wifi_sta/
+endif
+ifneq ($(CONFIG_MT_AP_SUPPORT),)
+obj-$(CONFIG_MT_AP_SUPPORT)       += mt_wifi_ap/
+endif
+ifneq ($(CONFIG_MT_STA_SUPPORT),)
+obj-$(CONFIG_MT_STA_SUPPORT)      += mt_wifi_sta/
+endif

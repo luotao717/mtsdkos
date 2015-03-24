@@ -714,6 +714,25 @@ int QDMARead(struct seq_file *seq, void *v)
 
 
 	}
+	/* Scheduler Info */
+	temp =  sysRegRead(QDMA_TX_SCH);
+	max_en = (temp & 0x00000800) >> 11;
+	max_rate = (temp & 0x000007f0) >> 4;
+	for (i = 0; i< (temp & 0xf); i++)
+		max_rate *= 10;
+	seq_printf(seq, "SCH1 Information:\n");
+	seq_printf(seq, "RATE_EN is %d; RATE is %dKbps.\n", max_en, max_rate);
+	max_en = (temp & 0x08000000) >> 27;
+	max_rate = (temp & 0x07f00000) >> 20;
+	for (i = 0; i< (temp & 0xf0000) >> 16; i++)
+		max_rate *= 10;
+	seq_printf(seq, "SCH2 Information:\n", i);
+	seq_printf(seq, "RATE_EN is %d; RATE is %dKbps.\n\n", max_en, max_rate);
+
+	/* General TXD Info */
+	temp = sysRegRead(QDMA_FQ_CNT);
+	seq_printf(seq, "SW TXD: %d/%d; HW TXD: %d/%d\n\n ", temp >> 16, NUM_TX_DESC, temp & 0xffff, NUM_QDMA_PAGE);
+	
 	seq_printf(seq, "skb-> mark to queue mapping(skb->mark, queue): \n");
 	for (i = 0; i < 64; i+=8){
 		seq_printf(seq, " (%d,%d)(%d,%d)(%d,%d)(%d,%d)(%d,%d)(%d,%d)(%d,%d)(%d,%d)\n", 

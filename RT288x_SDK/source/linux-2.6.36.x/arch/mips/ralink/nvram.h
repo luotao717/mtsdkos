@@ -38,6 +38,7 @@
 #define TR069CERT_NVRAM    	CONFIG2_NVRAM+1
 #else
 #define EXTEND_BLOCK_NUM 0
+#define VOIP_NVRAM			RT2860_NVRAM
 #if defined CONFIG_CONFIG_SHRINK
 #define CONFIG2_NVRAM           RT2860_NVRAM
 #endif

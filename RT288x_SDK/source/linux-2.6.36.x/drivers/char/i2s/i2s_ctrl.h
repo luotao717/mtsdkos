@@ -311,7 +311,7 @@ typedef struct i2s_config_t
 	spinlock_t lock;
 	wait_queue_head_t i2s_tx_qh, i2s_rx_qh;
 #if defined(CONFIG_SND_RALINK_SOC)
-	struct snd_pcm_substream *pss;
+	struct snd_pcm_substream *pss[2];
 #endif
 #endif
 	u32 dmach;

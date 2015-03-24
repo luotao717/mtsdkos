@@ -1,4 +1,4 @@
-/* $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/miniupnpd-1.6/miniupnpd.c#1 $ */
+/* $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/miniupnpd-1.6/miniupnpd.c#2 $ */
 /* MiniUPnP project
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * (c) 2006-2012 Thomas Bernard
@@ -185,6 +185,10 @@ int get_udp_dst_port (char *payload);
 /* variables used by signals */
 static volatile int quitting = 0;
 volatile int should_send_public_address_change_notif = 0;
+
+#ifdef ENABLE_WSC_SERVICE
+extern int wsc_debug_level;
+#endif /* ENABLE_WSC_SERVICE */
 
 /* OpenAndConfHTTPSocket() :
  * setup the socket used to handle incoming HTTP connections. */
@@ -1084,6 +1088,10 @@ init(int argc, char * * argv, struct runtime_vars * v)
 	}
 	else
 	{
+#ifdef ENABLE_WSC_SERVICE
+		wsc_debug_level = RT_DBG_OFF;
+#endif /* ENABLE_WSC_SERVICE */
+
 #ifdef USE_DAEMON
 		if(daemon(0, 0)<0) {
 			perror("daemon()");
@@ -1105,7 +1113,7 @@ init(int argc, char * * argv, struct runtime_vars * v)
 	if(!debug_flag)
 	{
 		/* speed things up and ignore LOG_INFO and LOG_DEBUG */
-		setlogmask(LOG_UPTO(LOG_NOTICE));
+		setlogmask(LOG_UPTO(LOG_ERR));
 	}
 
 	if(checkforrunning(pidfilename) < 0)
@@ -1349,7 +1357,7 @@ main(int argc, char * * argv)
 				syslog(LOG_ERR, "Failed to open socket for WPS. EXITING");
 				return 1;
 			}
-			syslog(LOG_NOTICE, "WPS listening on port %d", WPS_PORT);
+			syslog(LOG_ERR, "WPS listening on port %d", WPS_PORT);
 
 			{
 				int flags;
@@ -1832,7 +1840,7 @@ main(int argc, char * * argv)
 				else
 				{
 					struct upnphttp * tmp = 0;
-					syslog(LOG_INFO, "HTTP connection from %s:%d",
+					syslog(LOG_ERR, "HTTP connection from %s:%d",
 						inet_ntoa(clientname.sin_addr),
 						ntohs(clientname.sin_port) );
 					/* Create a new upnphttp object and add it to
@@ -1885,7 +1893,7 @@ main(int argc, char * * argv)
 				char addr_str[64];
 
 				sockaddr_to_string((struct sockaddr *)&clientname, addr_str, sizeof(addr_str));
-				syslog(LOG_INFO, "HTTP connection from %s", addr_str);
+				syslog(LOG_ERR, "HTTP connection from %s", addr_str);
 				/* Create a new upnphttp object and add it to
 				 * the active upnphttp object list */
 				tmp = New_upnphttp(shttp);

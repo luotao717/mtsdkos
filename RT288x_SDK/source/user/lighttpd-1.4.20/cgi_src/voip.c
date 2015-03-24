@@ -29,12 +29,12 @@ void voip_status2(char *input)
 	if ((strcmp(connect_status2, "Connect") == 0))
 	{
 		printf("Voip connect2\n");
-		do_system("/etc/init.d/sc connect 1");
+		do_system("/etc/init.d/sc connect 2");
 	}
 	if ((strcmp(connect_status2, "Disconnect") == 0))
 	{
 		printf("Voip disconnect 2\n");
-		do_system("/etc/init.d/sc disconnect 1"); 
+		do_system("/etc/init.d/sc disconnect 2"); 
 	}
 	free_all(1, connect_status2);
 }
@@ -56,24 +56,24 @@ void set_voip(char *input)
 	
 	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_REG_ADDR", reIp);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_REG_PORT", rePort);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SEP_REG_ADDR", sep_reIp);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SEP_REG_PORT", sep_rePort);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_REG_EXPIRY", reg_ptime);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_PRI_PROXY_ADDR", proxyIp);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_PRI_PROXY_PORT", proxyPort);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_OUTBOUND_ADDR", outboundIp);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_OUTBOUND_PORT", outboundPort);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_NAT_SRV_ADDR", stunIp);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_NAT_SRV_PORT", stunPort);	
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_REG_ADDR", reIp);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_REG_PORT", rePort);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SEP_REG_ADDR", sep_reIp);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SEP_REG_PORT", sep_rePort);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_REG_EXPIRY", reg_ptime);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_PRI_PROXY_ADDR", proxyIp);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_PRI_PROXY_PORT", proxyPort);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_OUTBOUND_ADDR", outboundIp);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_OUTBOUND_PORT", outboundPort);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_NAT_SRV_ADDR", stunIp);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_NAT_SRV_PORT", stunPort);
 	
 	
 	/*
 	reip = strdup(web_get("stunIp", input, 1));
 	reip = strdup(web_get("stunPort", input, 1));
 	*/
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	free_all(11, reIp, rePort, sep_reIp, sep_rePort, reg_ptime, proxyIp, proxyPort, outboundIp, outboundPort, stunIp, stunPort);
 }
 void set_voip2(char *input)
@@ -89,23 +89,25 @@ void set_voip2(char *input)
 	proxyPort2 = strdup(web_get("proxyPort2", input, 1));
 	outboundIp2 = strdup(web_get("outboundIp2", input, 1));
 	outboundPort2 = strdup(web_get("outboundPort2", input, 1));
+	stunIp2 = strdup(web_get("stunIp2", input, 1));
+	stunPort2 = strdup(web_get("stunPort2", input, 1));
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_REG_ADDR", reIp2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_REG_PORT", rePort2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_SEP_REG_ADDR", sep_reIp2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_SEP_REG_PORT", sep_rePort2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_REG_EXPIRY", reg_ptime2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_PRI_PROXY_ADDR", proxyIp2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_PRI_PROXY_PORT", proxyPort2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_OUTBOUND_ADDR", outboundIp2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_OUTBOUND_PORT", outboundPort2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_NAT_SRV_ADDR", stunIp2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_NAT_SRV_PORT", stunPort2);	
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_REG_ADDR", reIp2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_REG_PORT", rePort2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_SEP_REG_ADDR", sep_reIp2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_SEP_REG_PORT", sep_rePort2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_REG_EXPIRY", reg_ptime2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_PRI_PROXY_ADDR", proxyIp2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_PRI_PROXY_PORT", proxyPort2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_OUTBOUND_ADDR", outboundIp2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_OUTBOUND_PORT", outboundPort2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_NAT_SRV_ADDR", stunIp2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_NAT_SRV_PORT", stunPort2);
 	/*
 	reip = strdup(web_get("stunIp", input, 1));
 	reip = strdup(web_get("stunPort", input, 1));
 	*/
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	free_all(11, reIp2, rePort2, sep_reIp2, sep_rePort2, reg_ptime2, proxyIp2, proxyPort2, outboundIp2, outboundPort2, stunIp2, stunPort2);
 }
 void voip_user(char *input)
@@ -141,36 +143,36 @@ void voip_user(char *input)
 	s_usr_name = strdup(web_get("s_usr_name", input, 1));
 	ring_back_timeout = strdup(web_get("ring_back_timeout", input, 1));
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ENABLE", sip_select);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_LOCAL_PORT", sip_port);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_DISPNAME", d_name);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_AUTHNAME", auth_name);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_PASSWORD", s_password);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ENABLE", sip_select);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_LOCAL_PORT", sip_port);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_DISPNAME", d_name);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_AUTHNAME", auth_name);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_PASSWORD", s_password);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_1ST_CODEC", codec1st);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_2ND_CODEC", codec2nd);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_3RD_CODEC", codec3rd);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_4TH_CODEC", codec4th);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_5TH_CODEC", codec5th);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_6TH_CODEC", codec6th);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_7TH_CODEC", codec7th);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_8TH_CODEC", codec8th);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_9TH_CODEC", codec9th);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_1ST_CODEC", codec1st);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_2ND_CODEC", codec2nd);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_3RD_CODEC", codec3rd);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_4TH_CODEC", codec4th);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_5TH_CODEC", codec5th);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_6TH_CODEC", codec6th);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_7TH_CODEC", codec7th);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_8TH_CODEC", codec8th);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_9TH_CODEC", codec9th);
 		
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_G723_RATE", g723_1_rates);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_ILBC_RATE", ilbc_rates);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SESSION_FLAG", setimer_select);
-	//nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SESSION_REFRESHER", outboundIp);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SESSION_METHOD", setimer_refresh);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_G723_RATE", g723_1_rates);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_ILBC_RATE", ilbc_rates);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SESSION_FLAG", setimer_select);
+	//nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SESSION_REFRESHER", outboundIp);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SESSION_METHOD", setimer_refresh);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SESSION_MIN_EXP", min_se_timer);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SESSION_TIMER", se_timer);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SESSION_MIN_EXP", min_se_timer);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SESSION_TIMER", se_timer);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_USER_AGENT", s_usr_name);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_TIMER_RINGING", ring_back_timeout);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_USERNAME", subscriber_number);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_USER_AGENT", s_usr_name);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_TIMER_RINGING", ring_back_timeout);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_USERNAME", subscriber_number);
 
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 		free_all(21, sip_select, sip_port, d_name, auth_name, s_password, codec1st, codec2nd, codec3rd, codec4th, codec5th, codec6th, codec7th, codec8th, codec9th, g723_1_rates
 	     ,ilbc_rates, setimer_select, setimer_refresh, min_se_timer, se_timer, s_usr_name, ring_back_timeout, subscriber_number);	
 }
@@ -207,35 +209,35 @@ void voip_user2(char *input)
 	s_usr_name2 = strdup(web_get("s_usr_name2", input, 1));
 	ring_back_timeout2 = strdup(web_get("ring_back_timeout2", input, 1));
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ENABLE", sip_select2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_LOCAL_PORT", sip_port2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_DISPNAME", d_name2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_AUTHNAME", auth_name2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_PASSWORD", s_password2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ENABLE", sip_select2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_LOCAL_PORT", sip_port2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_DISPNAME", d_name2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_AUTHNAME", auth_name2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_PASSWORD", s_password2);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_1ST_CODEC", codec1st2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_2ND_CODEC", codec2nd2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_3RD_CODEC", codec3rd2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_4TH_CODEC", codec4th2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_5TH_CODEC", codec5th2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_6TH_CODEC", codec6th2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_7TH_CODEC", codec7th2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_8TH_CODEC", codec8th2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_9TH_CODEC", codec9th2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_1ST_CODEC", codec1st2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_2ND_CODEC", codec2nd2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_3RD_CODEC", codec3rd2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_4TH_CODEC", codec4th2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_5TH_CODEC", codec5th2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_6TH_CODEC", codec6th2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_7TH_CODEC", codec7th2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_8TH_CODEC", codec8th2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_9TH_CODEC", codec9th2);
 		
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_G723_RATE", g723_1_rates2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_ILBC_RATE", ilbc_rates2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_SESSION_FLAG", setimer_select2);
-	//nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_SESSION_REFRESHER", outboundIp);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_SESSION_METHOD", setimer_refresh2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_G723_RATE", g723_1_rates2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_ILBC_RATE", ilbc_rates2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_SESSION_FLAG", setimer_select2);
+	//nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_SESSION_REFRESHER", outboundIp);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_SESSION_METHOD", setimer_refresh2);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_SESSION_MIN_EXP", min_se_timer2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_SESSION_TIMER", se_timer2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_SESSION_MIN_EXP", min_se_timer2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_SESSION_TIMER", se_timer2);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_USER_AGENT", s_usr_name2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_TIMER_RINGING", ring_back_timeout2);
-  	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_USERNAME", subscriber_number2);
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_USER_AGENT", s_usr_name2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_TIMER_RINGING", ring_back_timeout2);
+  	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_USERNAME", subscriber_number2);
+	nvram_commit(VOIP_NVRAM );
 		free_all(21, sip_select2, sip_port2, d_name2, auth_name2, s_password2, codec1st2, codec2nd2, codec3rd2, codec4th2, codec5th2, codec6th2, codec7th2, codec8th2, codec9th2, g723_1_rates2
 	     ,ilbc_rates2, setimer_select2, setimer_refresh2, min_se_timer2, se_timer2, s_usr_name2, ring_back_timeout2, subscriber_number2);	
 }
@@ -269,34 +271,34 @@ void voip_feature(char *input)
 	
 	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_AUTO_DECLINE", a_d_anonymous);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_HIDE_USER_ID", h_u_id);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_MWI", mwi);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_MWI_INTERVAL", mwi_interval);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_MWI_EVENT", mwi_event);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_AUTO_DECLINE", a_d_anonymous);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_HIDE_USER_ID", h_u_id);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_MWI", mwi);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_MWI_INTERVAL", mwi_interval);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_MWI_EVENT", mwi_event);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_HOLD_METHOD", holdmethod);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_DTMF_TYPE", dtmfoption);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_HOLD_METHOD", holdmethod);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_DTMF_TYPE", dtmfoption);
 
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_SIP_INFO_ENABLE", sipinfo);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_ALL_CF", allcallforward);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_CFU", unconditionalcf);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_CFU_TARGET", unconditionalcf_target);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_SIP_INFO_ENABLE", sipinfo);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_ALL_CF", allcallforward);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_CFU", unconditionalcf);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_CFU_TARGET", unconditionalcf_target);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_CFB", busycf);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_CFB_TARGET", busycf_target);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_CFB", busycf);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_CFB_TARGET", busycf_target);
 		
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_CFNA", noanswer_cf);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_CFNA_TARGET", noanswer_cf_target);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_CALL_WAITING", call_waiting);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_CFNA", noanswer_cf);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_CFNA_TARGET", noanswer_cf_target);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_CALL_WAITING", call_waiting);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_HOTLINE", hotline);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_HOTLINE", hotline);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_HOTLINE_TARGET", hotline_target);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_HOTLINE_TIMER", hotline_period_time);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_ADV_DND", dnd);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_HOTLINE_TARGET", hotline_target);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_HOTLINE_TIMER", hotline_period_time);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_ADV_DND", dnd);
 
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(20, a_d_anonymous, h_u_id, mwi, mwi_interval, mwi_event, holdmethod, dtmfoption, sipinfo, allcallforward, unconditionalcf, unconditionalcf_target
 	    ,busycf, busycf_target, noanswer_cf, noanswer_cf_target, call_waiting, hotline, hotline_target, hotline_period_time, dnd);	
@@ -334,34 +336,34 @@ void voip_feature2(char *input)
 	
 	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_AUTO_DECLINE", a_d_anonymous2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_HIDE_USER_ID", h_u_id2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_MWI", mwi2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_MWI_INTERVAL", mwi_interval2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_MWI_EVENT", mwi_event2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_AUTO_DECLINE", a_d_anonymous2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_HIDE_USER_ID", h_u_id2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_MWI", mwi2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_MWI_INTERVAL", mwi_interval2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_MWI_EVENT", mwi_event2);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_HOLD_METHOD", holdmethod2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_DTMF_TYPE", dtmfoption2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_HOLD_METHOD", holdmethod2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_DTMF_TYPE", dtmfoption2);
 
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_SIP_INFO_ENABLE", sipinfo2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_ALL_CF", allcallforward2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_CFU", unconditionalcf2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_CFU_TARGET", unconditionalcf_target2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_SIP_INFO_ENABLE", sipinfo2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_ALL_CF", allcallforward2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_CFU", unconditionalcf2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_CFU_TARGET", unconditionalcf_target2);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_CFB", busycf2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_CFB_TARGET", busycf_target2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_CFB", busycf2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_CFB_TARGET", busycf_target2);
 		
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_CFNA", noanswer_cf2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_CFNA_TARGET", noanswer_cf_target2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_CALL_WAITING", call_waiting2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_CFNA", noanswer_cf2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_CFNA_TARGET", noanswer_cf_target2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_CALL_WAITING", call_waiting2);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_HOTLINE", hotline2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_HOTLINE", hotline2);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_HOTLINE_TARGET", hotline_target2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_HOTLINE_TIMER", hotline_period_time2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_ADV_DND", dnd2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_HOTLINE_TARGET", hotline_target2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_HOTLINE_TIMER", hotline_period_time2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_ADV_DND", dnd2);
 
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(20, a_d_anonymous2, h_u_id2, mwi2, mwi_interval2, mwi_event2, holdmethod2, dtmfoption2, sipinfo2, allcallforward2, unconditionalcf2, unconditionalcf_target2
 	    ,busycf2, busycf_target2, noanswer_cf2, noanswer_cf_target2, call_waiting2, hotline2, hotline_target2, hotline_period_time2, dnd2);	
@@ -375,10 +377,10 @@ void voip_dialing(char *input)
 	timer_digit = strdup(web_get("timer_digit", input, 1));
 	timer_first_digit = strdup(web_get("timer_first_digit", input, 1));
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_TIMER_INTER_DIGIT", timer_digit);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_TIMER_FIRST_DIGIT", timer_first_digit);	
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_TIMER_INTER_DIGIT", timer_digit);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_TIMER_FIRST_DIGIT", timer_first_digit);
 	
-	nvram_commit(CONFIG2_NVRAM );	
+	nvram_commit(VOIP_NVRAM );
 	free_all(2, timer_digit, timer_first_digit);
 }
 
@@ -389,10 +391,10 @@ void voip_dialing2(char *input)
 	timer_digit2 = strdup(web_get("timer_digit2", input, 1));
 	timer_first_digit2 = strdup(web_get("timer_first_digit2", input, 1));
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_TIMER_INTER_DIGIT", timer_digit2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_TIMER_FIRST_DIGIT", timer_first_digit2);	
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_TIMER_INTER_DIGIT", timer_digit2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_TIMER_FIRST_DIGIT", timer_first_digit2);
 	
-	nvram_commit(CONFIG2_NVRAM );	
+	nvram_commit(VOIP_NVRAM );
 	free_all(2, timer_digit2, timer_first_digit2);
 }
 
@@ -423,7 +425,7 @@ void voip_speed_dial(char *input)
 	dial_activeEnabled_int = atoi(dial_activeEnabled);
 	
 	
-	if(( VoipDialRules = (char *)nvram_bufget(CONFIG2_NVRAM , "VoipDialRules")) && strlen( VoipDialRules) ){
+	if(( VoipDialRules = (char *)nvram_bufget(VOIP_NVRAM , "VoipDialRules")) && strlen( VoipDialRules) ){
 		if(dial_activeEnabled_int==0)
 			snprintf(rule, sizeof(rule), "%s;0,%d,%d,%s",  VoipDialRules, dialShortNumber_int, dialrealNumber_int,dialNote);
 		else
@@ -436,7 +438,7 @@ void voip_speed_dial(char *input)
 			snprintf(rule, sizeof(rule), "1,%d,%d,%s", dialShortNumber_int, dialrealNumber_int, dialNote);
   }
 
-	if(( SC_ACCT_1_SD_STR = (char *)nvram_bufget(CONFIG2_NVRAM , "SC_ACCT_1_SD_STR")) && strlen( SC_ACCT_1_SD_STR) ){
+	if(( SC_ACCT_1_SD_STR = (char *)nvram_bufget(VOIP_NVRAM , "SC_ACCT_1_SD_STR")) && strlen( SC_ACCT_1_SD_STR) ){
 		if(dial_activeEnabled_int==0)
 			snprintf(dialrule, sizeof(dialrule), "%s;0,N,%d,%d,%s",  SC_ACCT_1_SD_STR, dialShortNumber_int, dialrealNumber_int,dialNote);
 		else
@@ -452,11 +454,11 @@ void voip_speed_dial(char *input)
 		
 
   
-  nvram_set(CONFIG2_NVRAM , "SC_ACCT_1_SD_AC_ENABLE", dial_activeEnabled);
-   nvram_set(CONFIG2_NVRAM , "SC_ACCT_1_SD_ENABLE", speedEnable);
-	nvram_set(CONFIG2_NVRAM , "VoipDialRules", rule);
-	nvram_set(CONFIG2_NVRAM , "SC_ACCT_1_SD_STR", dialrule);
-	nvram_commit(CONFIG2_NVRAM );
+  nvram_set(VOIP_NVRAM , "SC_ACCT_1_SD_AC_ENABLE", dial_activeEnabled);
+   nvram_set(VOIP_NVRAM , "SC_ACCT_1_SD_ENABLE", speedEnable);
+	nvram_set(VOIP_NVRAM , "VoipDialRules", rule);
+	nvram_set(VOIP_NVRAM , "SC_ACCT_1_SD_STR", dialrule);
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(5, speedEnable, dial_activeEnabled, dialShortNumber, dialrealNumber, dialNote);
 }
@@ -483,7 +485,7 @@ void voip_speed_dial2(char *input)
 	dial_activeEnabled_int2 = atoi(dial_activeEnabled2);
 	
 	
-	if(( VoipDialRules2 = (char *)nvram_bufget(CONFIG2_NVRAM , "VoipDialRules2")) && strlen( VoipDialRules2) ){
+	if(( VoipDialRules2 = (char *)nvram_bufget(VOIP_NVRAM , "VoipDialRules2")) && strlen( VoipDialRules2) ){
 		if(dial_activeEnabled_int2==0)
 			snprintf(rule2, sizeof(rule2), "%s;0,%d,%d,%s",  VoipDialRules2, dialShortNumber_int2, dialrealNumber_int2,dialNote2);
 		else
@@ -496,7 +498,7 @@ void voip_speed_dial2(char *input)
 			snprintf(rule2, sizeof(rule2), "1,%d,%d,%s", dialShortNumber_int2, dialrealNumber_int2, dialNote2);
   }
 
-	if(( SC_ACCT_2_SD_STR = (char *)nvram_bufget(CONFIG2_NVRAM , "SC_ACCT_2_SD_STR")) && strlen( SC_ACCT_2_SD_STR) ){
+	if(( SC_ACCT_2_SD_STR = (char *)nvram_bufget(VOIP_NVRAM , "SC_ACCT_2_SD_STR")) && strlen( SC_ACCT_2_SD_STR) ){
 		if(dial_activeEnabled_int2==0)
 			snprintf(dialrule2, sizeof(dialrule2), "%s;0,N,%d,%d,%s",  SC_ACCT_2_SD_STR, dialShortNumber_int2, dialrealNumber_int2,dialNote2);
 		else
@@ -512,11 +514,11 @@ void voip_speed_dial2(char *input)
 		
 
   
-  nvram_set(CONFIG2_NVRAM , "SC_ACCT_2_SD_AC_ENABLE", dial_activeEnabled2);
-   nvram_set(CONFIG2_NVRAM , "SC_ACCT_2_SD_ENABLE", speedEnable2);
-	nvram_set(CONFIG2_NVRAM , "VoipDialRules2", rule2);
-	nvram_set(CONFIG2_NVRAM , "SC_ACCT_2_SD_STR", dialrule2);
-	nvram_commit(CONFIG2_NVRAM );
+  nvram_set(VOIP_NVRAM , "SC_ACCT_2_SD_AC_ENABLE", dial_activeEnabled2);
+   nvram_set(VOIP_NVRAM , "SC_ACCT_2_SD_ENABLE", speedEnable2);
+	nvram_set(VOIP_NVRAM , "VoipDialRules2", rule2);
+	nvram_set(VOIP_NVRAM , "SC_ACCT_2_SD_STR", dialrule2);
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(5, speedEnable2, dial_activeEnabled2, dialShortNumber2, dialrealNumber2, dialNote2);
 }
@@ -531,8 +533,8 @@ static void dialRuleDelete(char *input)
 
 	char *new_rules, *new_rules1;
 	
-  const char *rules = (char *)nvram_bufget(CONFIG2_NVRAM , "VoipDialRules");
-  const char *rules1 = (char *)nvram_bufget(CONFIG2_NVRAM , "SC_ACCT_1_SD_STR");
+  const char *rules = (char *)nvram_bufget(VOIP_NVRAM , "VoipDialRules");
+  const char *rules1 = (char *)nvram_bufget(VOIP_NVRAM , "SC_ACCT_1_SD_STR");
     if(!rules || !strlen(rules) )
         return;
 
@@ -573,9 +575,9 @@ static void dialRuleDelete(char *input)
 	voip_delete_nth_value(deleArray, rule_count, new_rules1, ';');
 	free(deleArray);
 
-	nvram_set(CONFIG2_NVRAM , "VoipDialRules", new_rules);
-	nvram_set(CONFIG2_NVRAM , "SC_ACCT_1_SD_STR", new_rules1);
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_set(VOIP_NVRAM , "VoipDialRules", new_rules);
+	nvram_set(VOIP_NVRAM , "SC_ACCT_1_SD_STR", new_rules1);
+	nvram_commit(VOIP_NVRAM );
 	free(new_rules);
 
 	return;
@@ -591,8 +593,8 @@ static void dialRuleDelete2(char *input)
 
 	char *new_rules2, *new_rules12;
 	
-  const char *rules2 = (char *)nvram_bufget(CONFIG2_NVRAM , "VoipDialRules2");
-  const char *rules12 = (char *)nvram_bufget(CONFIG2_NVRAM , "SC_ACCT_2_SD_STR");
+  const char *rules2 = (char *)nvram_bufget(VOIP_NVRAM , "VoipDialRules2");
+  const char *rules12 = (char *)nvram_bufget(VOIP_NVRAM , "SC_ACCT_2_SD_STR");
     if(!rules2 || !strlen(rules2) )
         return;
 
@@ -633,9 +635,9 @@ static void dialRuleDelete2(char *input)
 	voip_delete_nth_value(deleArray2, rule_count2, new_rules12, ';');
 	free(deleArray2);
 
-	nvram_set(CONFIG2_NVRAM , "VoipDialRules2", new_rules2);
-	nvram_set(CONFIG2_NVRAM , "SC_ACCT_2_SD_STR", new_rules12);
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_set(VOIP_NVRAM , "VoipDialRules2", new_rules2);
+	nvram_set(VOIP_NVRAM , "SC_ACCT_2_SD_STR", new_rules12);
+	nvram_commit(VOIP_NVRAM );
 	free(new_rules2);
 
 	return;
@@ -644,9 +646,9 @@ void voip_fax(char *input)
 {
 	char *fax_option;
 	fax_option = strdup(web_get("fax_option", input, 1));
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_FAX_TYPE", fax_option);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_FAX_TYPE", fax_option);
 
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(1, fax_option);	
 }
@@ -654,9 +656,9 @@ void voip_fax2(char *input)
 {
 	char *fax_option2;
 	fax_option2 = strdup(web_get("fax_option2", input, 1));
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_FAX_TYPE", fax_option2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_FAX_TYPE", fax_option2);
 
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(1, fax_option2);	
 }
@@ -668,10 +670,10 @@ void voip_rtp(char *input)
 	rtppacketloss = strdup(web_get("rtppacketloss", input, 1));		
 	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_RTP_DETECT", rtpEnable);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_RTP_DETECT_INTERVAL", rtptimeout);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_1_MEDIA_RTP_DETECT_PKT_LOSS", rtppacketloss);
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_RTP_DETECT", rtpEnable);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_RTP_DETECT_INTERVAL", rtptimeout);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_1_MEDIA_RTP_DETECT_PKT_LOSS", rtppacketloss);
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(3, rtpEnable, rtptimeout, rtppacketloss);	
 }
@@ -683,10 +685,10 @@ void voip_rtp2(char *input)
 	rtppacketloss2 = strdup(web_get("rtppacketloss2", input, 1));		
 	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_RTP_DETECT", rtpEnable2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_RTP_DETECT_INTERVAL", rtptimeout2);
-	nvram_bufset(CONFIG2_NVRAM , "SC_ACCT_2_MEDIA_RTP_DETECT_PKT_LOSS", rtppacketloss2);
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_RTP_DETECT", rtpEnable2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_RTP_DETECT_INTERVAL", rtptimeout2);
+	nvram_bufset(VOIP_NVRAM , "SC_ACCT_2_MEDIA_RTP_DETECT_PKT_LOSS", rtppacketloss2);
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(3, rtpEnable2, rtptimeout2, rtppacketloss2);	
 }
@@ -714,25 +716,25 @@ void voip_system(char *input)
 	
 	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_SPEED_UP_DIALING", speedEnable);
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_SPEED_UP_DIALING_STR", speedup_string);
-	nvram_bufset(CONFIG2_NVRAM , "SC_EMERG_ENABLE", emergencyEnable);
-	nvram_bufset(CONFIG2_NVRAM , "SC_EMERG_REGISTRATION", emergencyRegistration);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_SPEED_UP_DIALING", speedEnable);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_SPEED_UP_DIALING_STR", speedup_string);
+	nvram_bufset(VOIP_NVRAM , "SC_EMERG_ENABLE", emergencyEnable);
+	nvram_bufset(VOIP_NVRAM , "SC_EMERG_REGISTRATION", emergencyRegistration);
 
-	nvram_bufset(CONFIG2_NVRAM , "SC_EMERG_TIMER_WMX_CONNECT", wimax_connect_timer);
-	nvram_bufset(CONFIG2_NVRAM , "SC_EMERG_NUM_GENERIC", number_generic);
-	nvram_bufset(CONFIG2_NVRAM , "SC_EMERG_NUM_POLICE", number_police);
-	nvram_bufset(CONFIG2_NVRAM , "SC_EMERG_NUM_MEDICAL", number_medical);
+	nvram_bufset(VOIP_NVRAM , "SC_EMERG_TIMER_WMX_CONNECT", wimax_connect_timer);
+	nvram_bufset(VOIP_NVRAM , "SC_EMERG_NUM_GENERIC", number_generic);
+	nvram_bufset(VOIP_NVRAM , "SC_EMERG_NUM_POLICE", number_police);
+	nvram_bufset(VOIP_NVRAM , "SC_EMERG_NUM_MEDICAL", number_medical);
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_EMERG_NUM_FIRE", number_fire);
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_SIP_PRIORITY_URGENT_NUMS", priority_urgent);	
-  nvram_bufset(CONFIG2_NVRAM , "SC_SYS_SIP_PRIORITY_NORMAL_NUMS", priority_normal);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_SIP_PRIORITY_NON_URGENT_NUMS", priority_non_urgent);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_SIP_T1_INTERVAL", sip_ti_interval);	
+	nvram_bufset(VOIP_NVRAM , "SC_EMERG_NUM_FIRE", number_fire);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_SIP_PRIORITY_URGENT_NUMS", priority_urgent);
+  nvram_bufset(VOIP_NVRAM , "SC_SYS_SIP_PRIORITY_NORMAL_NUMS", priority_normal);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_SIP_PRIORITY_NON_URGENT_NUMS", priority_non_urgent);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_SIP_T1_INTERVAL", sip_ti_interval);
 	
 
 	
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	
 	free_all(13, speedEnable, speedup_string, emergencyEnable,emergencyRegistration, wimax_connect_timer, number_generic, number_police, number_medical, number_fire, priority_urgent, priority_normal, priority_non_urgent, sip_ti_interval);
 }
@@ -761,28 +763,28 @@ void voip_media(char *input)
 	dvcc_enable = strdup(web_get("dvcc_enable", input, 1));	
 	static_jitter_len = strdup(web_get("static_jitter_len", input, 1));	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_RTCP_SEND_INTERVAL", rtcp_interval);
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_PORT_START", media_port_start);	
-  nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_PORT_END", media_port_end);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G726_16_PT", g_726_16k);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G726_24_PT", g_726_24k);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G726_32_PT", g_726_32k);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G726_40_PT", g_726_40k);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_ILBC_PT", ilbc_pt);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_TELEVT_PT", telephone_event);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_RTCP_SEND_INTERVAL", rtcp_interval);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_PORT_START", media_port_start);
+  nvram_bufset(VOIP_NVRAM , "SC_MEDIA_PORT_END", media_port_end);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G726_16_PT", g_726_16k);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G726_24_PT", g_726_24k);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G726_32_PT", g_726_32k);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G726_40_PT", g_726_40k);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_ILBC_PT", ilbc_pt);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_TELEVT_PT", telephone_event);
 
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G711_PTIME", g_711_codec);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G723_PTIME", g_723_codec);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G726_PTIME", g_726_codec);	
-  nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_G729_PTIME", g_729_codec);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_MEDIA_CODEC_ILBC_PTIME", ilbc_codec);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_VOICE_JB_TYPE", voice_jitter_buffer_type);
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_VOICE_PLC_ENABLE", packet_loss_concealment);
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_FEATURE_DVCC", dvcc_enable);
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_VOICE_JB_LEN", voice_jitter_buffer_len);
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_T38_STATIC_JB_LEN", static_jitter_len);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G711_PTIME", g_711_codec);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G723_PTIME", g_723_codec);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G726_PTIME", g_726_codec);
+  nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_G729_PTIME", g_729_codec);
+	nvram_bufset(VOIP_NVRAM , "SC_MEDIA_CODEC_ILBC_PTIME", ilbc_codec);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_VOICE_JB_TYPE", voice_jitter_buffer_type);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_VOICE_PLC_ENABLE", packet_loss_concealment);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_FEATURE_DVCC", dvcc_enable);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_VOICE_JB_LEN", voice_jitter_buffer_len);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_T38_STATIC_JB_LEN", static_jitter_len);
 					
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_commit(VOIP_NVRAM );
 	free_all(19, rtcp_interval, media_port_start, media_port_end, g_726_16k, g_726_24k, g_726_32k, g_726_40k, ilbc_pt, telephone_event,g_711_codec, g_723_codec, g_726_codec, g_729_codec, ilbc_codec, voice_jitter_buffer_type,voice_jitter_buffer_len,packet_loss_concealment,dvcc_enable,static_jitter_len);
 	
 }
@@ -790,9 +792,9 @@ void voip_qos(char *input){
 	char *sip_tos_diffserv, *rtp_tos_diffserv;
 	sip_tos_diffserv = strdup(web_get("sip_tos_diffserv", input, 1));		
 	rtp_tos_diffserv = strdup(web_get("rtp_tos_diffserv", input, 1));
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_QOS_SIP_TOS", sip_tos_diffserv);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_SYS_QOS_RTP_TOS", rtp_tos_diffserv);	
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_QOS_SIP_TOS", sip_tos_diffserv);
+	nvram_bufset(VOIP_NVRAM , "SC_SYS_QOS_RTP_TOS", rtp_tos_diffserv);
+	nvram_commit(VOIP_NVRAM );
 	free_all(2, sip_tos_diffserv,rtp_tos_diffserv);
 
 }
@@ -807,14 +809,14 @@ void voip_provision(char *input){
 	retry_count = strdup(web_get("retry_count", input, 1));		
 	
 	
-	nvram_bufset(CONFIG2_NVRAM , "SC_AUTO_PROV_ENABLE", provision_enable);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_AUTO_PROV_FTP_ADDR", ftp_server);
-	nvram_bufset(CONFIG2_NVRAM , "SC_AUTO_PROV_FTP_FILE_NAME", file_path);	
-	nvram_bufset(CONFIG2_NVRAM , "SC_AUTO_PROV_FTP_LOGIN_NAME", login_user_name);		
-	nvram_bufset(CONFIG2_NVRAM , "SC_AUTO_PROV_FTP_LOGIN_PASSWD", login_password);		
-	nvram_bufset(CONFIG2_NVRAM , "SC_AUTO_PROV_FTP_TIMEOUT", connection_timeout);			
-	nvram_bufset(CONFIG2_NVRAM , "SC_AUTO_PROV_FTP_RETRY", retry_count);		
-	nvram_commit(CONFIG2_NVRAM );
+	nvram_bufset(VOIP_NVRAM , "SC_AUTO_PROV_ENABLE", provision_enable);
+	nvram_bufset(VOIP_NVRAM , "SC_AUTO_PROV_FTP_ADDR", ftp_server);
+	nvram_bufset(VOIP_NVRAM , "SC_AUTO_PROV_FTP_FILE_NAME", file_path);
+	nvram_bufset(VOIP_NVRAM , "SC_AUTO_PROV_FTP_LOGIN_NAME", login_user_name);
+	nvram_bufset(VOIP_NVRAM , "SC_AUTO_PROV_FTP_LOGIN_PASSWD", login_password);
+	nvram_bufset(VOIP_NVRAM , "SC_AUTO_PROV_FTP_TIMEOUT", connection_timeout);
+	nvram_bufset(VOIP_NVRAM , "SC_AUTO_PROV_FTP_RETRY", retry_count);
+	nvram_commit(VOIP_NVRAM );
 	free_all(7, provision_enable, ftp_server, file_path, login_user_name, login_password, connection_timeout, retry_count);
 
 }
@@ -829,18 +831,18 @@ void voip_phone(char *input){
 		caller_id_display = strdup(web_get("caller_id_display", input, 1));		
 		caller_id_pwr = strdup(web_get("caller_id_pwr", input, 1));		
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_FLASH_DETECT_UP_LV", flash_detect_up);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_FLASH_DETECT_DN_LV", flash_detect_lv);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_FLASH_DETECT_UP_LV", flash_detect_up);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_FLASH_DETECT_DN_LV", flash_detect_lv);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_VOGAIN_TX_LV", voice_tx_level);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_VOGAIN_RX_LV", voice_rx_level);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_VOGAIN_TX_LV", voice_tx_level);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_VOGAIN_RX_LV", voice_rx_level);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_RING_IMPEDENCE", ring_impedance);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_CALLER_ID_TYPE", caller_id_type);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_RING_IMPEDENCE", ring_impedance);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_CALLER_ID_TYPE", caller_id_type);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_CALLER_ID_DISP", caller_id_display);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_CALLER_ID_PWR", caller_id_pwr);
-    nvram_commit(CONFIG2_NVRAM );
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_CALLER_ID_DISP", caller_id_display);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_CALLER_ID_PWR", caller_id_pwr);
+    nvram_commit(VOIP_NVRAM );
 	  free_all(7, flash_detect_up, flash_detect_lv, voice_tx_level, ring_impedance, voice_rx_level, caller_id_type, caller_id_display, caller_id_pwr);		
 										
 }
@@ -855,18 +857,18 @@ void voip_phone2(char *input){
 		caller_id_display2 = strdup(web_get("caller_id_display2", input, 1));		
 		caller_id_pwr2 = strdup(web_get("caller_id_pwr2", input, 1));		
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_FLASH_DETECT_UP_LV", flash_detect_up2);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_FLASH_DETECT_DN_LV", flash_detect_lv2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_FLASH_DETECT_UP_LV", flash_detect_up2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_FLASH_DETECT_DN_LV", flash_detect_lv2);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_VOGAIN_TX_LV", voice_tx_level2);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_VOGAIN_RX_LV", voice_rx_level2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_VOGAIN_TX_LV", voice_tx_level2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_VOGAIN_RX_LV", voice_rx_level2);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_RING_IMPEDENCE", ring_impedance2);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_CALLER_ID_TYPE", caller_id_type2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_RING_IMPEDENCE", ring_impedance2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_CALLER_ID_TYPE", caller_id_type2);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_CALLER_ID_DISP", caller_id_display2);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_CALLER_ID_PWR", caller_id_pwr2);
-    nvram_commit(CONFIG2_NVRAM );
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_CALLER_ID_DISP", caller_id_display2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_CALLER_ID_PWR", caller_id_pwr2);
+    nvram_commit(VOIP_NVRAM );
 	  free_all(7, flash_detect_up2, flash_detect_lv2, voice_tx_level2, ring_impedance2, voice_rx_level2, caller_id_type2, caller_id_display2, caller_id_pwr2);		
 										
 }
@@ -875,11 +877,11 @@ void voip_voice(char *input){
 		voice_active_detector = strdup(web_get("voice_active_detector", input, 1));	
 		line_echo_cancell = strdup(web_get("line_echo_cancell", input, 1));
 		drc = strdup(web_get("drc", input, 1));	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_VAD", voice_active_detector);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_LEC", line_echo_cancell);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_VAD", voice_active_detector);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_LEC", line_echo_cancell);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_DRC", drc);		
-    nvram_commit(CONFIG2_NVRAM );
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_DRC", drc);
+    nvram_commit(VOIP_NVRAM );
 	  free_all(3, voice_active_detector, line_echo_cancell, drc);	
 	
 }
@@ -889,11 +891,11 @@ void voip_voice2(char *input){
 		voice_active_detector2 = strdup(web_get("voice_active_detector2", input, 1));	
 		line_echo_cancell2 = strdup(web_get("line_echo_cancell2", input, 1));
 		drc2 = strdup(web_get("drc2", input, 1));	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_VAD", voice_active_detector2);	
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_LEC", line_echo_cancell2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_VAD", voice_active_detector2);
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_LEC", line_echo_cancell2);
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_DRC", drc2);		
-    nvram_commit(CONFIG2_NVRAM );
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_DRC", drc2);
+    nvram_commit(VOIP_NVRAM );
 	  free_all(3, voice_active_detector2, line_echo_cancell2, drc2);	
 	
 }
@@ -903,8 +905,8 @@ void voip_profile(char *input){
 		country_profile = strdup(web_get("country_profile", input, 1));	
 
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_1_REGION", country_profile);		
-    nvram_commit(CONFIG2_NVRAM );
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_1_REGION", country_profile);
+    nvram_commit(VOIP_NVRAM );
 	  free_all(1, country_profile);	
 	
 }
@@ -913,8 +915,8 @@ void voip_profile2(char *input){
 		country_profile2 = strdup(web_get("country_profile2", input, 1));	
 
 		
-		nvram_bufset(CONFIG2_NVRAM , "SC_LINE_2_REGION", country_profile2);		
-    nvram_commit(CONFIG2_NVRAM );
+		nvram_bufset(VOIP_NVRAM , "SC_LINE_2_REGION", country_profile2);
+    nvram_commit(VOIP_NVRAM );
 	  free_all(2, country_profile2);	
 	
 }
@@ -933,20 +935,20 @@ void tr069(char *input){
     //caCf = strdup(web_get("caCf", input, 1));		
     //cCif = strdup(web_get("cCif", input, 1));	
     
-		nvram_bufset(CONFIG2_NVRAM , "TR_ENABLE", tr069Enable);    
-		nvram_bufset(CONFIG2_NVRAM , "TR_CLIENT_PORT", fixed_client_port);        
-		nvram_bufset(CONFIG2_NVRAM , "TR_ACS_URL", acs_server_url);   
-		nvram_bufset(CONFIG2_NVRAM , "TR_BOOTSTRAP", bootstrapEnable);		
-		nvram_bufset(CONFIG2_NVRAM , "TR_ACS_USER", acs_usemame);		
-		nvram_bufset(CONFIG2_NVRAM , "TR_ACS_PASS", acs_password);					    	
-		nvram_bufset(CONFIG2_NVRAM , "TR_INFORM_ENABLE", periodicalEnable);		
-		nvram_bufset(CONFIG2_NVRAM , "TR_INFORM_INTERVAL", periodicalInterval);	
-		nvram_bufset(CONFIG2_NVRAM , "TR_CR_USER", connectionRequsetUse);
-		nvram_bufset(CONFIG2_NVRAM , "TR_CR_PASS", connectionPassword);
-		//nvram_bufset(CONFIG2_NVRAM , "TR_CR_PATH", caCf);
-		//nvram_bufset(CONFIG2_NVRAM , "TR_CR_PASS", cCif);		
+		nvram_bufset(VOIP_NVRAM , "TR_ENABLE", tr069Enable);
+		nvram_bufset(VOIP_NVRAM , "TR_CLIENT_PORT", fixed_client_port);
+		nvram_bufset(VOIP_NVRAM , "TR_ACS_URL", acs_server_url);
+		nvram_bufset(VOIP_NVRAM , "TR_BOOTSTRAP", bootstrapEnable);
+		nvram_bufset(VOIP_NVRAM , "TR_ACS_USER", acs_usemame);
+		nvram_bufset(VOIP_NVRAM , "TR_ACS_PASS", acs_password);
+		nvram_bufset(VOIP_NVRAM , "TR_INFORM_ENABLE", periodicalEnable);
+		nvram_bufset(VOIP_NVRAM , "TR_INFORM_INTERVAL", periodicalInterval);
+		nvram_bufset(VOIP_NVRAM , "TR_CR_USER", connectionRequsetUse);
+		nvram_bufset(VOIP_NVRAM , "TR_CR_PASS", connectionPassword);
+		//nvram_bufset(VOIP_NVRAM , "TR_CR_PATH", caCf);
+		//nvram_bufset(VOIP_NVRAM , "TR_CR_PASS", cCif);
 				
-    nvram_commit(CONFIG2_NVRAM );
+    nvram_commit(VOIP_NVRAM );
 	  free_all(12, tr069Enable, fixed_client_port, acs_server_url, bootstrapEnable, acs_usemame, acs_password, periodicalEnable, periodicalInterval, connectionRequsetUse, connectionPassword, caCf, cCif);	
 	
 }
@@ -955,7 +957,7 @@ int main(int argc, char *argv[])
 	char *form, *inStr;
 	long inLen;
 
-	nvram_init(CONFIG2_NVRAM );
+	nvram_init(VOIP_NVRAM );
 
 	inLen = strtol(getenv("CONTENT_LENGTH"), NULL, 10) + 1;
 	if (inLen <= 1) {
@@ -1034,7 +1036,7 @@ int main(int argc, char *argv[])
 
 	free(inStr);
 leave:	
-	nvram_close(CONFIG2_NVRAM );
+	nvram_close(VOIP_NVRAM );
 
 	return 0;
 }

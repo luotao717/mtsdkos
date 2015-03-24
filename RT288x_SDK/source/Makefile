@@ -66,6 +66,7 @@ ROMFSINST= romfs-inst.sh
 SCRIPTSDIR = $(ROOTDIR)/config/scripts
 TFTPDIR    = /tftpboot
 BUILD_START_STRING ?= $(shell date "+%a, %d %b %Y %T %z")
+#WIFI_HEAD_GEN=
 
 # generate and use kernel headers (for uclibc library)
 ifeq ($(CONFIG_LINUXDIR),linux-3.10.14.x)

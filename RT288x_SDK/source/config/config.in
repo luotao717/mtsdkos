@@ -177,7 +177,7 @@ dep_bool '  Samba Server'			CONFIG_USER_SAMBA $CONFIG_USER_STORAGE
 if [ "$CONFIG_USER_SAMBA" = "y" ]; then
 if [ "$CONFIG_UCLIBC_0_9_33_2" = "y" ]; then
         choice ' Samba version'  " v3.0.2 CONFIG_SAMBA_3_0_2 \
-                                   v3.6.6 CONFIG_SAMBA_3_6_6
+                                   v4.0.24 CONFIG_SAMBA_4_0_24
                                  " v3.0.2
 else
 	define_bool CONFIG_SAMBA_3_0_2 y
@@ -449,12 +449,6 @@ fi
 
 if [ "$CONFIG_DEFAULTS_RALINK_MT7628" = "y" ]; then
 bool 'Long Loop Detection'          CONFIG_RALINKAPP_LONG_LOOP
-fi
-
-if [ "$CONFIG_RALINKAPP_LONG_LOOP" = "y" ]; then
-        choice 'Long Loop Detection'  " 2-state       CONFIG_USER_LONG_LOOP_2_STATE\
-		                        3-state       CONFIG_USER_LONG_LOOP_3_STATE
-				      " 3-state
 fi
 
 if [ "$CONFIG_DEFAULTS_RALINK_RT2880" != "y" ]; then

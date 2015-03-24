@@ -1,3 +1,4 @@
+#include <linux/autoconf.h>
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
@@ -80,7 +81,9 @@
 #define HAVE_INTTYPES_H 1
 
 /* Whether to enable IPv6 support */
+#ifdef CONFIG_IPV6
 #define HAVE_IPV6 1
+#endif
 
 /* Define to 1 if you have the `kqueue' function. */
 /* #undef HAVE_KQUEUE */

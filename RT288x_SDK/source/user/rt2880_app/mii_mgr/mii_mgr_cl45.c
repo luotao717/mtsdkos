@@ -14,10 +14,10 @@
 void show_usage(void)
 {
 #ifndef CONFIG_RT2860V2_AP_MEMORY_OPTIMIZATION
-	printf("mii_mgr_cl45 -g -p [port number] -d [dev number]-r [register number]\n");
-	printf("  Get: mii_mgr -g -p 3 -d 0x5 -r 0x4\n\n");
-	printf("mii_mgr_cl45 -s -p [port number] -d [dev number]-r [register number] -v [value]\n");
-	printf("  Set: mii_mgr -s -p 4 -d 0x6 -r 0x1 -v 0xff11\n\n");
+	printf("Get: mii_mgr_cl45 -g -p [port number] -d [dev number] -r [register number]\n");
+	printf("Example: mii_mgr_cl45 -g -p 3 -d 0x5 -r 0x4\n\n");
+	printf("Set: mii_mgr_cl45 -s -p [port number] -d [dev number] -r [register number] -v [value]\n");
+	printf("Example: mii_mgr_cl45 -s -p 4 -d 0x6 -r 0x1 -v 0xff11\n\n");
 #endif
 }
 
@@ -71,16 +71,16 @@ int main(int argc, char *argv[])
 	if ((method == RAETH_MII_READ_CL45) || (method == RAETH_MII_WRITE_CL45)){
 		ret = ioctl(sk, method, &ifr);
 		if (ret < 0) {
-			printf("mii_mgr: ioctl error\n");
+			printf("mii_mgr_cl45: ioctl error\n");
 		}
 		else
 			switch (method) {
 				case RAETH_MII_READ_CL45:
-					printf("Get: port%d.dev.%xh.reg.%xh = %04x\n",
+					printf("Get: port%d dev%Xh_reg%Xh = 0x%04X\n",
 							mii.port_num, mii.dev_addr, mii.reg_addr, mii.val_out);
 					break;
 				case RAETH_MII_WRITE_CL45:
-					printf("Set: port%d.dev%xh.reg.%xh = %04x\n",
+					printf("Set: port%d dev%Xh_reg%Xh = 0x%04X\n",
 							mii.port_num, mii.dev_addr, mii.reg_addr, mii.val_in);
 					break;
 			}

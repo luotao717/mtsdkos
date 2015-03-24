@@ -33,9 +33,15 @@
 #define NUM_RX_DESC     256
 #define NUM_TX_DESC    	256
 #elif defined (CONFIG_RT_3052_ESW)
+#if defined (CONFIG_RALINK_MT7621) 
 #define NUM_RX_DESC     512
 #define NUM_QRX_DESC     16
-#define NUM_TX_DESC     512 
+#define NUM_TX_DESC     512
+#else
+#define NUM_RX_DESC     256
+#define NUM_QRX_DESC     16
+#define NUM_TX_DESC     256
+#endif
 #else
 #define NUM_RX_DESC     256
 #define NUM_TX_DESC     256

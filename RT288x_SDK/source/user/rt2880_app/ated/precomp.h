@@ -5,6 +5,7 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <sys/select.h>
+#include <sys/wait.h>
 #ifdef DBG
 #include <stdarg.h>
 #endif // DBG //

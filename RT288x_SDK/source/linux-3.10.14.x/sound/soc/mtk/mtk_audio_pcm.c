@@ -35,7 +35,7 @@
 #include "drivers/char/ralink_gdma.h"
 #include "mtk_audio_driver.h"
 
-#define GDMA_PAGE_SZ I2S_PAGE_SIZE
+#define GDMA_PAGE_SZ (I2S_PAGE_SIZE)
 #define GDMA_PAGE_NUM MAX_I2S_PAGE
 
 dma_addr_t i2s_txdma_addr, i2s_rxdma_addr;

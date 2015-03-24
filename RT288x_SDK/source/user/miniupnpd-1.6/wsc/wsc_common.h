@@ -130,8 +130,7 @@ void DBGPRINTF(int level, char *fmt, ...);
 
 #define MAC_ADDR_LEN 			6
 #define LENGTH_802_1_H			8
-#define MAX_LEN_OF_SSID			32
-#define MAX_LEN_OF_MAC_STR		18
+
 
 #define BIT(x)	(1<<x)
 

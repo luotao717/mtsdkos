@@ -196,9 +196,9 @@ if(voip == 1)
 	a.add(983, 980, "VoIP Profile",			"javascript:go('voip/voip_profile.shtml');");
 	if (lin_number == 2 || lin_number == 3 || lin_number == 4){
 		a.add(1000, 950, "Line2",			        "javascript:a.oo(1000);");
-		a.add(1001, 1000, "VoIP Phone",			"javascript:go('voip/voip_phone.shtml');");
-		a.add(1002, 1000, "VoIP Voice",			"javascript:go('voip/voip_voice.shtml');");
-		a.add(1003, 1000, "VoIP Profile",			"javascript:go('voip/voip_profile.shtml');");	
+		a.add(1001, 1000, "VoIP Phone",			"javascript:go('voip/voip_phone2.shtml');");
+		a.add(1002, 1000, "VoIP Voice",			"javascript:go('voip/voip_voice2.shtml');");
+		a.add(1003, 1000, "VoIP Profile",			"javascript:go('voip/voip_profile2.shtml');");	
   }
 	
 	

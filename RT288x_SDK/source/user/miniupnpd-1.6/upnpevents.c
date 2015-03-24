@@ -1,4 +1,4 @@
-/* $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/miniupnpd-1.6/upnpevents.c#1 $ */
+/* $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/miniupnpd-1.6/upnpevents.c#2 $ */
 /* MiniUPnP project
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * (c) 2008-2012 Thomas Bernard
@@ -141,7 +141,7 @@ upnpevents_addSubscriber(const char * eventurl,
 	struct subscriber * tmp;
 	/*static char uuid[42];*/
 	/* "uuid:00000000-0000-0000-0000-000000000000"; 5+36+1=42bytes */
-	syslog(LOG_DEBUG, "addSubscriber(%s, %.*s, %d)",
+	syslog(LOG_ERR, "addSubscriber(%s, %.*s, %d)",
 	       eventurl, callbacklen, callback, timeout);
 	/*strncpy(uuid, uuidvalue, sizeof(uuid));
 	uuid[sizeof(uuid)-1] = '\0';*/
@@ -199,7 +199,7 @@ upnp_event_var_change_notify(enum subscriber_service_enum service)
 	sub = subscriberlist.lh_first;
 	if (sub == NULL)
 	{
-		printf("\n--------------subscriberlist is empty !!!--------------\n");
+		DBGPRINTF(RT_DBG_INFO, "\n--------------subscriberlist is empty !!!--------------\n");
 	}
 #endif /* RT_DEBUG */
 

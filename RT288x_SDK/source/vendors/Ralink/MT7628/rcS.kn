@@ -4,7 +4,6 @@ mkdir -p /var/run
 makedevlinks.sh
 cat /etc_ro/motd > /dev/console
 nvram_daemon&
-long_loop&
 #goahead&
 
 #for telnet debugging
@@ -30,6 +29,6 @@ brctl addif br0 eth2.1
 brctl addif br0 ra0
 ifconfig br0 10.10.10.254 netmask 255.255.255.0
 config-vlan.sh 2 LLLLW
-
+long_loop&
 
 telnetd

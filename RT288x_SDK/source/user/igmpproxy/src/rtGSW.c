@@ -263,7 +263,7 @@ void updateMacTable(struct group *entry, int delay_delete)
 	value = (value << 16);
 	value |= (1 << 15);//IVL=1
 
-#if defined (CONFIG_RALINK_MT7621) && defined (CONFIG_RAETH_GMAC2) 
+#if defined (CONFIG_RALINK_MT7621) && defined (CONFIG_RAETH_GMAC2) && !defined (CONFIG_RAETH_8023AZ_EEE)
 
 #elif defined (CONFIG_P5_RGMII_TO_MT7530_MODE)
 
@@ -298,7 +298,8 @@ void updateMacTable(struct group *entry, int delay_delete)
 		/*
 		 * new an additional entry for IGMP Inquery/Report on WAN.
 		 */
-		if(WANPORT){
+		if(WANPORT)
+		{
 		        value = value1;
 			value = (value & 0xffffff00);
 			value |= ((WAN_VLAN_ID) << 0); //WAN ID ==2
@@ -307,8 +308,11 @@ void updateMacTable(struct group *entry, int delay_delete)
 			printf("WAN REG_ESW_WT_MAC_ATA2 is 0x%x\n\r",value);
 
 			value1 = (WANPORT << 4);
+#if defined (CONFIG_RAETH_8023AZ_EEE)
+			value1 |= (0x1 << 9);//port 5 cpu port
+#else
 			value1 |= (0x1 << 10);//port 6 cpu port
-
+#endif
 			value1 |= (0xff << 24); //w_age_field
 			value1 |= (0x3<< 2); //static
 

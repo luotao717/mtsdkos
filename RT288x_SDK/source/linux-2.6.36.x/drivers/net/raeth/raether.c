@@ -873,7 +873,11 @@ static int rt2880_eth_recv(struct net_device* dev)
 #if defined (CONFIG_RAETH_SKB_RECYCLE_2K)
                 skb = skbmgr_dev_alloc_skb2k();
 #else
+#if LINUX_VERSION_CODE > KERNEL_VERSION(3,10,0)
+        skb = alloc_skb(MAX_RX_LENGTH + NET_IP_ALIGN, GFP_ATOMIC);
+#else
 		skb = __dev_alloc_skb(MAX_RX_LENGTH + NET_IP_ALIGN, GFP_ATOMIC);
+#endif
 #endif
 
 		if (unlikely(skb == NULL))
@@ -1425,6 +1429,12 @@ static void esw_link_status_changed(int port_no, void *dev_id)
 #endif    
     if(reg_val & 0x1) {
 	printk("ESW: Link Status Changed - Port%d Link UP\n", port_no);
+#if defined (CONFIG_RALINK_MT7621) && defined (CONFIG_RAETH_8023AZ_EEE)
+	mii_mgr_write(port_no, 31, 0x52b5);
+	mii_mgr_write(port_no, 16, 0xb780);
+	mii_mgr_write(port_no, 17, 0x00e0);
+	mii_mgr_write(port_no, 16, 0x9780);
+#endif
 #if defined (CONFIG_WAN_AT_P0)
 	if(port_no==0) {
 	    schedule_work(&ei_local->kill_sig_wq);
@@ -1436,6 +1446,12 @@ static void esw_link_status_changed(int port_no, void *dev_id)
 #endif
     } else {	    
 	printk("ESW: Link Status Changed - Port%d Link Down\n", port_no);
+#if defined (CONFIG_RALINK_MT7621) && defined (CONFIG_RAETH_8023AZ_EEE)
+	mii_mgr_write(port_no, 31, 0x52b5);
+	mii_mgr_write(port_no, 16, 0xb780);
+	mii_mgr_write(port_no, 17, 0x0000);
+	mii_mgr_write(port_no, 16, 0x9780);
+#endif
     }
 }
 #endif
@@ -3263,6 +3279,45 @@ void LANWANPartition(void)
 }
 
 
+#if defined (CONFIG_RAETH_8023AZ_EEE) && defined (CONFIG_RALINK_MT7621)
+void mt7621_eee_patch(void)
+{
+	u32 i;
+
+	for(i=0;i<5;i++)
+	{
+		/* Enable EEE */
+		mii_mgr_write(i, 13, 0x07);
+		mii_mgr_write(i, 14, 0x3c);
+		mii_mgr_write(i, 13, 0x4007);
+		mii_mgr_write(i, 14, 0x6);
+
+		/* Forced Slave mode */
+		mii_mgr_write(i, 31, 0x0);
+		mii_mgr_write(i, 9, 0x1600);
+		/* Increase SlvDPSready time */
+		mii_mgr_write(i, 31, 0x52b5);
+		mii_mgr_write(i, 16, 0xafae);
+		mii_mgr_write(i, 18, 0x2f);
+		mii_mgr_write(i, 16, 0x8fae);
+		/* Incease post_update_timer */
+		mii_mgr_write(i, 31, 0x3);
+		mii_mgr_write(i, 17, 0x4b);
+		/* Adjust 100_mse_threshold */
+		mii_mgr_write(i, 13, 0x1e);
+		mii_mgr_write(i, 14, 0x123);
+		mii_mgr_write(i, 13, 0x401e);
+		mii_mgr_write(i, 14, 0xffff);
+		/* Disable mcc
+		   mii_mgr_write(i, 13, 0x1e);
+		   mii_mgr_write(i, 14, 0xa6);
+		   mii_mgr_write(i, 13, 0x401e);
+		   mii_mgr_write(i, 14, 0x300);
+	        */
+	}
+
+}
+#endif
 
 void setup_internal_gsw(void)
 {
@@ -3495,6 +3550,10 @@ void setup_internal_gsw(void)
 	mii_mgr_read(31, 0x7808 ,&regValue);
         regValue |= (3<<16); //Enable INTR
 	mii_mgr_write(31, 0x7808 ,regValue);
+#if defined (CONFIG_RAETH_8023AZ_EEE) && defined (CONFIG_RALINK_MT7621)
+	mt7621_eee_patch();
+#endif
+
 }
 
 #if defined (CONFIG_GE1_TRGMII_FORCE_1200)
@@ -3942,6 +4001,12 @@ void mt7628_ephy_init(void)
 		mii_mgr_read(i, 26, &phy_val);// EEE setting
 		phy_val |= (1 << 5);
 		mii_mgr_write(i, 26, phy_val);
+#else
+		//disable EEE
+		mii_mgr_write(i, 13, 0x7);
+		mii_mgr_write(i, 14, 0x3C);
+		mii_mgr_write(i, 13, 0x4007);
+		mii_mgr_write(i, 14, 0x0);
 #endif
 		mii_mgr_write(i, 30, 0xa000);
 		mii_mgr_write(i, 31, 0xa000); // change L2 page
@@ -3950,13 +4015,10 @@ void mt7628_ephy_init(void)
 		mii_mgr_write(i, 24, 0x1610);
 		mii_mgr_write(i, 30, 0x1f15);
 		mii_mgr_write(i, 28, 0x6111);
-#if 0
+
 		mii_mgr_read(i, 4, &phy_val);
 		phy_val |= (1 << 10);
 		mii_mgr_write(i, 4, phy_val);
-		mii_mgr_write(i, 31, 0x2000); // change G2 page
-		mii_mgr_write(i, 26, 0x0000);
-#endif
 	}
 
         //100Base AOI setting
@@ -3973,6 +4035,11 @@ void mt7628_ephy_init(void)
 	mii_mgr_write(0, 28, 0x0233);
 	mii_mgr_write(0, 29, 0x000a);
 	mii_mgr_write(0, 30, 0x0000);
+	/* Fix EPHY idle state abnormal behavior */	
+	mii_mgr_write(0, 31, 0x4000); //change G4 page
+	mii_mgr_write(0, 29, 0x000d);
+	mii_mgr_write(0, 30, 0x0500);
+	
 }
 
 #endif
@@ -4300,7 +4367,7 @@ void rt305x_esw_init(void)
 	sysRegWrite(RSTCTRL, val);
 
 
-	sysRegRead(RALINK_SYSCTL_BASE + 0x64);
+	val = sysRegRead(RALINK_SYSCTL_BASE + 0x64);
 #if defined (CONFIG_ETH_ONE_PORT_ONLY)
 	val &= 0xf003f003;
 	val |= 0x05540554;

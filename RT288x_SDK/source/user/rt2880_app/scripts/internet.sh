@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/rt2880_app/scripts/internet.sh#4 $
+# $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/rt2880_app/scripts/internet.sh#7 $
 #
 # usage: internet.sh
 #
@@ -385,7 +385,7 @@ configVIF()
 # opmode adjustment:
 #   if AP client was not compiled and operation mode was set "3" -> set $opmode "1"
 #   if Station was not compiled and operation mode was set "2" -> set $opmode "1"
-if [ "$opmode" = "3" -a "$CONFIG_RT2860V2_AP_APCLI$CONFIG_RT3090_AP_APCLI$CONFIG_RT5392_AP_APCLI$CONFIG_RT5592_AP_APCLI$CONFIG_RT3593_AP_APCLI$CONFIG_MT7610_AP_APCLI$CONFIG_RT3572_AP_APCLI$CONFIG_RT5572_AP_APCLI$CONFIG_RT3680_iNIC_AP_APCLI$CONFIG_RTPCI_AP_APCLI" == "" ]; then
+if [ "$opmode" = "3" -a "$CONFIG_RT2860V2_AP_APCLI$CONFIG_RT3090_AP_APCLI$CONFIG_RT5392_AP_APCLI$CONFIG_RT5592_AP_APCLI$CONFIG_RT3593_AP_APCLI$CONFIG_MT7610_AP_APCLI$CONFIG_RT3572_AP_APCLI$CONFIG_RT5572_AP_APCLI$CONFIG_RT3680_iNIC_AP_APCLI$CONFIG_RTPCI_AP_APCLI$CONFIG_APCLI_SUPPORT" == "" ]; then
 	nvram_set 2860 OperationMode 1
 	opmode="1"
 fi
@@ -684,7 +684,7 @@ if [ "$opmode" = "0" ]; then
 	addWds2Br0
 	addMesh2Br0
 	APCLI=`nvram_get 2860 apClient`
-	if [ "$CONFIG_RT2860V2_AP_APCLI$CONFIG_RT3090_AP_APCLI$CONFIG_RT5392_AP_APCLI$CONFIG_RT5592_AP_APCLI$CONFIG_RT3593_AP_APCLI$CONFIG_MT7610_AP_APCLI$CONFIG_RT3572_AP_APCLI$CONFIG_RT5572_AP_APCLI$CONFIG_RT3680_iNIC_AP_APCLI$CONFIG_RTPCI_AP_APCLI" != "" -a "$APCLI" = "1" ]; then
+	if [ "$CONFIG_RT2860V2_AP_APCLI$CONFIG_RT3090_AP_APCLI$CONFIG_RT5392_AP_APCLI$CONFIG_RT5592_AP_APCLI$CONFIG_RT3593_AP_APCLI$CONFIG_MT7610_AP_APCLI$CONFIG_RT3572_AP_APCLI$CONFIG_RT5572_AP_APCLI$CONFIG_RT3680_iNIC_AP_APCLI$CONFIG_RTPCI_AP_APCLI$CONFIG_APCLI_SUPPORT" != "" -a "$APCLI" = "1" ]; then
 		ifconfig apcli0 up
 		brctl addif br0 apcli0
 	fi
@@ -744,8 +744,8 @@ elif [ "$opmode" = "1" ]; then
 			fi
 			if [ "$CONFIG_WAN_AT_P0" = "y" ]; then
 				if [ "$CONFIG_RALINK_MT7621" = "y" ]; then
-					echo '##### config Switch vlan partition (WLLLL) #####'
 					if [ "$CONFIG_RAETH_8023AZ_EEE" = "y" ]; then
+					echo '##### config Switch vlan partition (WLLLL) #####'
 					switch vlan  set 1 1 01111011
 					switch vlan  set 2 2 10000100
 					switch pvid 0 2
@@ -767,8 +767,8 @@ elif [ "$opmode" = "1" ]; then
 				fi
 			else
 				if [ "$CONFIG_RALINK_MT7621" = "y" ]; then
-					echo '##### config Switch vlan partition (LLLLW) #####'
 					if [ "$CONFIG_RAETH_8023AZ_EEE" = "y" ]; then
+					echo '##### config Switch vlan partition (LLLLW) #####'
 					switch vlan  set 1 1 11110011
 					switch vlan  set 2 2 00001100
 					switch pvid 4 2
@@ -1055,11 +1055,18 @@ if [ "$CONFIG_USER_BLUEANGEL" == "y" ]; then
 	blueangel &
 fi
 
+if [ "$CONFIG_RALINK_MT7621" = "y" ]; then
+if [ "$CONFIG_RAETH_8023AZ_EEE" = "y" ];then
+	killall -q smart_eee
+	smart_eee&
+fi
+fi
+
+
 if [ "$CONFIG_RALINK_MT7628" = "y" ]; then
 killall -q long_loop
 long_loop&
 fi
-
 
 if [ "$CONFIG_USER_NFCSD" = "y" ]; then
 killall nfchod

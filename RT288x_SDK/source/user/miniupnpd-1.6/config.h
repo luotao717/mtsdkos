@@ -9,13 +9,13 @@
 
 #define MINIUPNPD_VERSION "1.6"
 
-#define UPNP_VERSION	"20120314"
+#define UPNP_VERSION	"20141126"
 #define USE_NETFILTER 1
 #define USE_IFACEWATCHER 1
 #define SUPPORT_REMOTEHOST
 
 #define OS_NAME		"Ralink"
-#define OS_VERSION	"SDK 4.2.0.0"
+#define OS_VERSION	"SDK 4.3.0.0"
 #define OS_URL		"http://www.ralinktech.com.tw/"
 
 /* syslog facility to be used by miniupnpd */

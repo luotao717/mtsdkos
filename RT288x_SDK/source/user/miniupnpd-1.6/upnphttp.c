@@ -1,4 +1,4 @@
-/* $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/miniupnpd-1.6/upnphttp.c#1 $ */
+/* $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/miniupnpd-1.6/upnphttp.c#2 $ */
 /* Project :  miniupnp
  * Website :  http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * Author :   Thomas Bernard
@@ -452,7 +452,7 @@ ProcessHttpQuery_upnphttp(struct upnphttp * h)
 	for(i = 0; i<15 && *p != '\r'; i++)
 		HttpVer[i] = *(p++);
 	HttpVer[i] = '\0';
-	syslog(LOG_INFO, "HTTP REQUEST : %s %s (%s)",
+	syslog(LOG_ERR, "HTTP REQUEST : %s %s (%s)",
 	       HttpCommand, HttpUrl, HttpVer);
 	ParseHttpHeaders(h);
 	if(strcmp("POST", HttpCommand) == 0)

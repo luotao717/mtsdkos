@@ -1797,8 +1797,8 @@ void i2s_dma_tx_handler(u32 dma_ch)
 
 EXIT:
 #if defined(CONFIG_SND_RALINK_SOC)
-	if(pi2s_config->pss)
-		snd_pcm_period_elapsed(pi2s_config->pss);
+	if(pi2s_config->pss[SNDRV_PCM_STREAM_PLAYBACK])
+		snd_pcm_period_elapsed(pi2s_config->pss[SNDRV_PCM_STREAM_PLAYBACK]);
 #endif
 	wake_up_interruptible(&(pi2s_config->i2s_tx_qh));		
 	return;
@@ -1866,8 +1866,8 @@ void i2s_dma_rx_handler(u32 dma_ch)
 
 EXIT:
 #if defined(CONFIG_SND_RALINK_SOC)
-	if(pi2s_config->pss)
-		snd_pcm_period_elapsed(pi2s_config->pss);
+	if(pi2s_config->pss[SNDRV_PCM_STREAM_CAPTURE])
+		snd_pcm_period_elapsed(pi2s_config->pss[SNDRV_PCM_STREAM_CAPTURE]);
 #endif
 	wake_up_interruptible(&(pi2s_config->i2s_rx_qh));
 #endif	

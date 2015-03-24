@@ -1325,6 +1325,63 @@ void obtw(int nvram, char *input)
 
 }
 #endif
+#if defined (CONFIG_SECOND_IF_MT7612E)	&& defined(CONFIG_FIRST_IF_MT7628)
+void obtw_mt7612(int nvram, char *input)
+{
+	char *obtw_enable, *OFDM_6M, *OFDM_9M,*OFDM_12M, *OFDM_18M,*HT20_MCS_0, *HT20_MCS_1, *HT20_MCS_2, *HT40_MCS_0, *HT40_MCS_1, *HT40_MCS_2, *VHT80_MCS_0, *VHT80_MCS_1, *VHT80_MCS_2;
+	int HT40_MCS_32 = 0;
+	web_debug_header();
+	obtw_enable = strdup(web_get("obtw_enable", input, 1));
+
+	OFDM_6M = strdup(web_get("OFDM_6M", input, 1));
+	OFDM_9M = strdup(web_get("OFDM_9M", input, 1));
+	OFDM_12M = strdup(web_get("OFDM_12M", input, 1));
+	OFDM_18M = strdup(web_get("OFDM_18M", input, 1));
+	HT20_MCS_0 = strdup(web_get("HT20_MCS_0", input, 1));
+  HT20_MCS_1 = strdup(web_get("HT20_MCS_1", input, 1));
+  HT20_MCS_2 = strdup(web_get("HT20_MCS_2", input, 1));
+  
+	HT40_MCS_0 = strdup(web_get("HT40_MCS_0", input, 1));
+	HT40_MCS_1 = strdup(web_get("HT40_MCS_1", input, 1));
+	HT40_MCS_2 = strdup(web_get("HT40_MCS_2", input, 1));
+	//HT40_MCS_32 = strdup(web_get("HT40_MCS_32", input, 1));
+	
+	VHT80_MCS_0 = strdup(web_get("VHT80_MCS_0", input, 1));
+	VHT80_MCS_1 = strdup(web_get("VHT80_MCS_1", input, 1));
+	VHT80_MCS_2	= strdup(web_get("VHT80_MCS_2", input, 1));
+	
+	
+	nvram_bufset(RT2860_NVRAM , "obtw_mt7612", obtw_enable);
+	nvram_bufset(RT2860_NVRAM , "OFDM_6M", OFDM_6M);
+	nvram_bufset(RT2860_NVRAM , "OFDM_9M", OFDM_9M);	
+	nvram_bufset(RT2860_NVRAM , "OFDM_12M", OFDM_12M);
+	nvram_bufset(RT2860_NVRAM , "OFDM_18M", OFDM_18M);
+	nvram_bufset(RT2860_NVRAM , "HT20_MCS_0", HT20_MCS_0);
+	nvram_bufset(RT2860_NVRAM , "HT20_MCS_1", HT20_MCS_1);
+	nvram_bufset(RT2860_NVRAM , "HT20_MCS_2", HT20_MCS_2);	
+	nvram_bufset(RT2860_NVRAM , "HT40_MCS_0", HT40_MCS_0);
+	//nvram_bufset(RT2860_NVRAM , "HT40_MCS_32", HT40_MCS_32);
+	nvram_bufset(RT2860_NVRAM , "HT40_MCS_1", HT40_MCS_1);	
+	nvram_bufset(RT2860_NVRAM , "HT40_MCS_2", HT40_MCS_2);
+	
+	nvram_bufset(RT2860_NVRAM , "VHT80_MCS_0", VHT80_MCS_0);	
+	nvram_bufset(RT2860_NVRAM , "VHT80_MCS_1", VHT80_MCS_1);
+	nvram_bufset(RT2860_NVRAM , "VHT80_MCS_2", VHT80_MCS_2);	
+
+		if(!strcmp(obtw_enable, "0")){
+			do_system("iwpriv rai0 set obtw=disable");
+		}else{
+			do_system("iwpriv rai0 set obtw=ofdm6m_%s_ofdm9m_%s_ofdm12m_%s_ofdm18m_%s_ht20mcs0_%s_ht20mcs1_%s_ht20mcs2_%s_ht40mcs0_%s_ht40mcs1_%s_ht40mcs2_%s_ht40mcs32_%d_vht80mcs0_%s_vht80mcs1_%s_vht80mcs2_%s", OFDM_6M, OFDM_9M, OFDM_12M, OFDM_18M, HT20_MCS_0, HT20_MCS_1, HT20_MCS_2, HT40_MCS_0, HT40_MCS_1, HT40_MCS_2, HT40_MCS_32, VHT80_MCS_0, VHT80_MCS_1, VHT80_MCS_2);
+		}
+	/*
+	reip = strdup(web_get("stunIp", input, 1));
+	reip = strdup(web_get("stunPort", input, 1));
+	*/
+	nvram_commit(RT2860_NVRAM );
+	free_all(14, obtw_enable, OFDM_6M, OFDM_9M, OFDM_12M, OFDM_18M, HT20_MCS_0, HT20_MCS_1, HT20_MCS_2, HT40_MCS_0, HT40_MCS_1, HT40_MCS_2,VHT80_MCS_0, VHT80_MCS_1, VHT80_MCS_2);
+
+}
+#endif
 int main(int argc, char *argv[]) 
 {
 	char *page, *inStr;
@@ -1410,6 +1467,10 @@ int main(int argc, char *argv[])
 #if defined (CONFIG_RALINK_MT7628)	
 	}else if (!strcmp(page, "obtw")) {
      obtw(nvram_id, inStr);
+#endif
+#if defined (CONFIG_SECOND_IF_MT7612E)	&& defined(CONFIG_FIRST_IF_MT7628)	
+	}else if (!strcmp(page, "obtw_mt7612")) {
+     obtw_mt7612(nvram_id, inStr);
 #endif
 	}
 	free(inStr);

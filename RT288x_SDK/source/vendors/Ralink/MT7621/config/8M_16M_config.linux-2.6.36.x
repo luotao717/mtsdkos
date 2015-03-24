@@ -1,6 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.36
+# Thu Feb  5 19:13:31 2015
 #
 CONFIG_MIPS=y
 
@@ -27,12 +28,12 @@ CONFIG_RT2880_DRAM_64M=y
 # CONFIG_RT2880_DRAM_256M is not set
 # CONFIG_RT2880_DRAM_512M is not set
 # CONFIG_MTD_SPI_RALINK is not set
+# CONFIG_MTK_MTD_NAND is not set
+CONFIG_MTD_ANY_RALINK=y
 # CONFIG_RT2880_FLASH_2M is not set
 # CONFIG_RT2880_FLASH_4M is not set
 CONFIG_RT2880_FLASH_8M=y
 # CONFIG_RT2880_FLASH_16M is not set
-# CONFIG_MTK_MTD_NAND is not set
-CONFIG_MTD_ANY_RALINK=y
 # CONFIG_DUAL_IMAGE is not set
 CONFIG_KERNEL_NVRAM=y
 CONFIG_EXTEND_NVRAM=y
@@ -1123,8 +1124,6 @@ CONFIG_MMC_BLOCK_BOUNCE=y
 #
 # MMC/SD/SDIO Host Controller Drivers
 #
-CONFIG_MTK_MMC=y
-# CONFIG_MTK_AEE_KDUMP is not set
 # CONFIG_MMC_SDHCI is not set
 # CONFIG_MMC_TIFM_SD is not set
 # CONFIG_MMC_CB710 is not set

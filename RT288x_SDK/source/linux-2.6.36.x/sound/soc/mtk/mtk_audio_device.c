@@ -216,6 +216,9 @@ static int mtk_codec_hw_params(struct snd_pcm_substream *substream,
 	unsigned long* pTable;
 	int mclk,ret,targetClk = 0;
 
+	/*For duplex mode, avoid setting twice.*/
+	if((rtd->bRxDMAEnable == GDMA_I2S_EN) || (rtd->bTxDMAEnable == GDMA_I2S_EN))
+		return 0;
 	//printk("%s:%d -val:%x \n",__func__,__LINE__,params_rate(params));
 #if defined(CONFIG_I2S_MCLK_12MHZ)
 	mclk = 12000000;

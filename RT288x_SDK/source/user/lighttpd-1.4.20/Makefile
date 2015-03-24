@@ -214,6 +214,47 @@ SUBDIRS = src doc tests cygwin openwrt
 EXTRA_DIST = autogen.sh SConstruct
 distcleancheck_listfiles = find -type f -exec sh -c 'test -f $(srcdir)/{} || echo {}' ';'
 
+ifeq ($(CONFIG_MT_WIFI_MODE_STA),)
+REMOVE_WWW = station
+endif
+ifeq ($(CONFIG_RTDEV),)
+REMOVE_WWW += wifi2
+endif
+ifeq ($(CONFIG_USB_SUPPORT),)
+REMOVE_WWW += usb 
+endif
+ifeq ($(CONFIG_USER_STORAGE),)
+REMOVE_WWW += webdav nas
+endif
+ifeq ($(CONFIG_MTK_TR069)$(CONFIG_MTK_VOIP),)
+REMOVE_WWW += voip
+endif
+ifeq ($(CONFIG_RALINKAPP_SWQOS)$(CONFIG_RALINKAPP_HWQOS),)
+REMOVE_WWW += internet/qos*
+endif
+ifeq ($(CONFIG_IPV6),)
+REMOVE_WWW += internet/ipv6.shtml
+endif
+ifeq ($(CONFIG_NF_CONNTRACK_PPTP)$(CONFIG_NF_CONNTRACK_PPTP_MODULE)$(CONFIG_IP_NF_PPTP)$(CONFIG_IP_NF_PPTP_MODULE),)
+REMOVE_WWW += internet/vpnpass.shtml
+endif
+ifeq ($(CONFIG_RALINKAPP_AUTO_WAN),)
+REMOVE_WWW += internet/auto_wan.shtml
+endif
+ifeq ($(CONFIG_MT_WDS_SUPPORT)$(CONFIG_WDS_SUPPORT),)
+REMOVE_WWW += wireless/wds.shtml
+endif
+ifeq ($(CONFIG_MT_APCLI_SUPPORT)$(CONFIG_APCLI_SUPPORT),)
+REMOVE_WWW += wireless/apcli.shtml
+endif
+ifeq ($(CONFIG_RALINKAPP_WAPI),)
+REMOVE_WWW += wireless/wapi_*
+endif
+ifeq ($(CONFIG_IP_NF_FILTER),)
+REMOVE_WWW += firewall/*_filter* firewall/system_firewall.shtml
+endif
+CFLAGS += -I$(ROOTDIR)/$(LINUXDIR)/include
+
 all: 
 	cp -r src/deps src/.deps
 	cp $(ROOTDIR)/$(LINUXDIR)/include/linux/autoconf.h cgi_src/linux_conf.h
@@ -222,13 +263,19 @@ all:
 	$(MAKE) $(AM_MAKEFLAGS) -C src
 	$(MAKE) $(AM_MAKEFLAGS) -C cgi_src
 
+
 romfs:
 	$(ROMFSINST) /etc_ro/lighttpd/lighttpd.conf
-#	$(ROMFSINST) /etc_ro/lighttpd/lighttpd.user
-	$(ROMFSINST) www /etc_ro/lighttpd/www
-	mkdir -p www/webdav
+	rm -rf www_temp;cp -r www www_temp
+	find www_temp/ -name "*.asp" -exec rm {} \;
+	for i in $(REMOVE_WWW); do \
+		rm -rf www_temp/$$i; \
+	done
+	$(ROMFSINST) www_temp /etc_ro/lighttpd/www
+ifeq ($(CONFIG_USER_STORAGE), y)
 	$(ROMFSINST) lighttpd_webdav.conf /etc_ro/lighttpd/lighttpd_webdav.conf
 	$(ROMFSINST) webdav.sh /bin/webdav.sh
+endif
 	make -C src romfs
 	make -C cgi_src romfs
 

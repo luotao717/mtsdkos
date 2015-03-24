@@ -13,14 +13,12 @@
 *******************************************************************************************************/
 static void RaCfg_Agent(void);	/*2013.12.04.Common Procedure*/
 static void NetReceive(u8 *inpkt, int len);
-static void sendATESTOP(int index);
-static void sendATESTART(int index);
 static int GetOpt(int argc, char *const argv[], const char *optstring);	/* GetOpt - only used in main.c */
 static void Usage(void);
 static int processPktOldMagic(u8 *inpkt, int len, int if_index);
 static int processPktNewMagic(u8 *inpkt, int len);
 static int if_match(const char *if_name);
-static void *pkt_proc_logic(void *arg);
+static void pkt_proc_logic(void *arg);
 static void task_dispatcher(u8 *inpkt, int len, int if_index);
 #ifdef DBG
 static void ate_hexdump(int level, char *str, unsigned char *pSrcBufVA, unsigned long SrcBufLen)
@@ -84,7 +82,6 @@ static const char *ate_daemon_version = "ate daemon v" VERSION_STR "\n";
 static int sock = -1;
 /* respond to QA by unicast frames if bUnicast == TRUE */
 static boolean bUnicast = FALSE;
-static unsigned char buffer[PKT_BUF_SIZE];
 //static unsigned char *buffer;
 static const char broadcast_addr[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 static int do_fork = 1;
@@ -221,7 +218,6 @@ static void clean_past_ated(){
 		char buffer[2048];
 		char line[256];
 		char ate_pid[16];
-		unsigned char exist_ate = 0;
 		close(pipefd[1]);
 		while(read(pipefd[0],buffer, sizeof(buffer)) != 0){
 			char *eol = os_strchr(buffer, '\n');
@@ -254,7 +250,6 @@ static void clean_past_ated(){
 					os_memset(ate_pid, 0, 16);
 					os_memcpy(ate_pid, l - dif2, dif2); //For delete appending space
 					ate_printf(MSG_DEBUG,"ate_pid: %s\n",ate_pid);
-					exist_ate = 1;
 					do{
 						int pid_found = 0;
 						int ret = -1;
@@ -589,12 +584,11 @@ static void task_dispatcher(u8 *inpkt, int len, int if_index)
 	//free(inpkt); //KOKO
 }
 
-static void *pkt_proc_logic(void *arg)
+static void pkt_proc_logic(void *arg)
 {
 	struct DRI_IF *dri_if = arg;
 	struct COMMON_PRIV *priv_data;
 	struct cmd_queue *q;
-	int serving = 0;
 	int unserved = 0;
 	int served = 0;
 	static int num_pkt = 0;
@@ -604,14 +598,11 @@ static void *pkt_proc_logic(void *arg)
 	q_ops = dri_if->ops;
 	priv_data = (struct COMMON_PRIV *)dri_if->priv_data;
 	q = &priv_data->q;
-#if 1
 	/* Get unserved number */
 	while(signup_flag){
 		unsigned char *pkt;
 		struct racfghdr *p_tmp = NULL;
 		int len = -1;
-		int Command_Type;
-		int i;
 		int len_to_host = 0;//RA_CFG_HLEN + NEW_MAGIC_ADDITIONAL_LEN;
 		/* Lock Queue */
 		q_ops->multi_lock_q(dri_if);
@@ -660,19 +651,11 @@ static void *pkt_proc_logic(void *arg)
 		q_ops->multi_unlock_q(dri_if);	
 	}
 clean_multi_proc:
-#if 0
-	for(serving=served;served<unserved;serving++){
-		unsigned char *tmp = q->cmd_arr[serving];
-		if(tmp!=NULL)
-			free(tmp);
-	}
-#endif
 	ate_printf(MSG_DEBUG, "Clean dri_cmd_q(%s)\n",dri_if->ifname);
 	q_ops->multi_proc_close(dri_if);
 	dri_if->close(dri_if);
 	free(dri_if);
 	dri_if_num--;
-#endif
 }
 
 static int processPktOldMagic(u8 *inpkt, int len, int if_index)
@@ -683,7 +666,6 @@ static int processPktOldMagic(u8 *inpkt, int len, int if_index)
 	u16 Command_Id;
 	u16 Sequence;
 	u16 Len;
-	pid_t pid;
 	int ret = 0;
 	unsigned char *p_tmp = inpkt;
 	unsigned char to_host[PKT_BUF_SIZE];
@@ -715,17 +697,6 @@ static int processPktOldMagic(u8 *inpkt, int len, int if_index)
 	Sequence = be2cpu16(Sequence);
 	p_tmp += sizeof(Sequence);
 
-	#if 0
-	if (Command_Id == RACFG_CMD_ATE_STOP)
-	{
-		pid = getpid();
-		// stuff my pid into the content
-		os_memcpy(&p_racfgh->data[0], (u8 *)&pid, sizeof(pid));
-		// We have content now.
-		Len += sizeof(pid);
-		p_racfgh->length = cpu2be16(Len);
-	}
-	#endif
 	/* Default old agent use 1 interface*/	
 	p_if = dri_fd[if_index];
 	if(p_if == NULL){
@@ -896,44 +867,4 @@ static void Usage(void)
 	       "  ated -d\n");
 	printf("example 5 for Dual Adapter and QA support Dual Adapter:\n"
 		   "  ated -ira0 -ira1\n");
-}
-
-static void sendATESTOP(int index)
-{
-	unsigned char *pkt = malloc(sizeof(struct racfghdr));
-	struct racfghdr *hdr = (struct racfghdr *)pkt;
-	/* Send ATESTOP command to driver before I am killed by command line(not by GUI). */
-	bzero(hdr, sizeof(hdr));
-	hdr->magic_no =  cpu2be32(RACFG_MAGIC_NO);
-	hdr->comand_type = cpu2be16(RACFG_CMD_TYPE_ETHREQ);
-	hdr->comand_id = cpu2be16(RACFG_CMD_ATE_STOP);
-	hdr->length = 0;
-	hdr->sequence = 0;
-	/* Conditional Branch to Check if its new DLL or old DLL*/
-	if(0){
-		/* Parse */
-	} else {
-		/* Default old agent use 1 interface*/
-		dri_fd[index]->send(dri_fd[index],pkt, 0);
-	}
-}
-
-static void sendATESTART(int index)
-{
-	unsigned char *pkt = malloc(sizeof(struct racfghdr));
-	struct racfghdr *hdr = (struct racfghdr *)pkt;
-	/* Send ATESTOP command to driver before I am killed by command line(not by GUI). */
-	bzero(hdr, sizeof(hdr));
-	hdr->magic_no =  cpu2be32(RACFG_MAGIC_NO);
-	hdr->comand_type = cpu2be16(RACFG_CMD_TYPE_ETHREQ);
-	hdr->comand_id = cpu2be16(RACFG_CMD_ATE_START);
-	hdr->length = 0;
-	hdr->sequence = 0;
-	/* Conditional Branch to Check if its new DLL or old DLL*/
-	if(0){
-		/* Parse */
-	} else {
-		/* Default old agent use 1 interface*/
-		dri_fd[index]->send(dri_fd[index],pkt, 0);
-	}
 }

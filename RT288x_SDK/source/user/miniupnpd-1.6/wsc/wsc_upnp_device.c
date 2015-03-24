@@ -1922,7 +1922,7 @@ static int WscEventMgmt_ProbreReq(
 	IN int  bufLen)
 {
 	unsigned char *encodeStr = NULL, *pWscMsg = NULL, *pUPnPMsg = NULL;
-	char srcMacStr[MAX_LEN_OF_MAC_STR];
+	char srcMacStr[18];
 	int encodeLen = 0, UPnPMsgLen = 0;
 	int retVal;
 	unsigned short wscLen;
@@ -1935,18 +1935,18 @@ static int WscEventMgmt_ProbreReq(
 
 	pWscMsg = (unsigned char *)(pBuf + sizeof(RTMP_WSC_MSG_HDR));
 	//Skip the SSID field
-	pWscMsg += MAX_LEN_OF_SSID;
+	pWscMsg += 32;
 			
 	/* Get the SrcMAC and copy to the WLANEVENTMAC, 
 		depends on the WFAWLANConfig:1  Service Template Version 1.01, 
 		the MAC format is "xx:xx:xx:xx:xx:xx", case-independent, 17 char.
 	*/
 	memset(srcMacStr, 0 , sizeof(srcMacStr));
-	snprintf(srcMacStr, MAX_LEN_OF_MAC_STR, "%02x:%02x:%02x:%02x:%02x:%02x", pWscMsg[0], pWscMsg[1], pWscMsg[2],pWscMsg[3],pWscMsg[4],pWscMsg[5]);
+	snprintf(srcMacStr, 18, "%02x:%02x:%02x:%02x:%02x:%02x", pWscMsg[0], pWscMsg[1], pWscMsg[2],pWscMsg[3],pWscMsg[4],pWscMsg[5]);
 	DBGPRINTF(RT_DBG_INFO, "ProbeReq->Mac=%s!\n", srcMacStr);
 
 	//Skip the SrcMAC field
-	pWscMsg += MAC_ADDR_LEN;
+	pWscMsg += 6;
 
 	//Get the WscProbeData Length
 	if (*pWscMsg == 0xdd)
@@ -1956,18 +1956,18 @@ static int WscEventMgmt_ProbreReq(
 
 	DBGPRINTF(RT_DBG_INFO, "(%s): pWscHdr Len=%d!\n", __FUNCTION__, wscLen);
 		
-	UPnPMsgLen = wscLen + MAX_LEN_OF_MAC_STR;
+	UPnPMsgLen = wscLen + 18;
 	pUPnPMsg = malloc(UPnPMsgLen);
 	
 	if(pUPnPMsg)
 	{
 		memset(pUPnPMsg, 0, UPnPMsgLen);
 		pUPnPMsg[0] = WSC_EVENT_WLANEVENTTYPE_PROBE;
-		memcpy(&pUPnPMsg[1], srcMacStr, MAX_LEN_OF_MAC_STR - 1); /* Copy string without '\0' */
+		memcpy(&pUPnPMsg[1], srcMacStr, 17);
 
 		//jump to the WscProbeReqData and copy to pUPnPMsg buffer
 		pWscMsg += 2;
-		memcpy(&pUPnPMsg[MAX_LEN_OF_MAC_STR], pWscMsg, wscLen);
+		memcpy(&pUPnPMsg[18], pWscMsg, wscLen);
 		wsc_hexdump("UPnP WLANEVENT Msg", (char *)pUPnPMsg, UPnPMsgLen);
 				
 		//encode the message use base64

@@ -57,7 +57,8 @@ hash_statistic_t gHashStat;
 /* local variables                                                      */
 /*******************************************************************************/
 //static hashTb_funcSet_t gfuncSet;
-static int gInitFlag  = 0;
+/*sync flag indicates that the memory which Hash have been constructed was sync into Flash*/
+static int gSyncFlag  = 0;
 static struct list_head gConfigHashTable[CONFIG_HASH_SIZE];
 
 /*******************************************************************************/
@@ -86,11 +87,19 @@ static void hashStatShow(void);
 static char *hashTb_conf_get(char *key);
 static int hashTb_conf_set(char *key, char *value);
 static int hashTb_conf_init(char **data,int len);
-static int hashTb_conf_getall(char** data,int len,int maxLen,int target);
+static int hashTb_conf_clear(void);
+static int hashTb_conf_getall(char** data,int maxLen,int target);
 
 /*******************************************************************************/
 /* Function Declartions                                                     */
 /*******************************************************************************/
+
+#define SYNC_FLAG_NOT_YET_CHECK if(!gSyncFlag)\
+									return HASHTB_RET_FAIL;
+#define SYNC_FLAG_DONE_CHECK if(gSyncFlag)\
+								return HASHTB_RET_FAIL;
+#define SYNC_FLAG_SET(b) gSyncFlag = b;
+
 #ifdef HT_DEBUG
 #define DEBUG_PRINT(str, args...) \
 	do { \
@@ -105,9 +114,12 @@ static int hashTb_conf_getall(char** data,int len,int maxLen,int target);
 #define LIST_CHECK_KEY(x) \
 	if(!x) continue
 
+#define ALIGN_32B(x) ((x) + 32 - ((x)%32))
+#define MALLOC(x) kmalloc(GFP_KERNEL,ALIGN_32B(x))
 
 int hash_funcSet_reg(hashTb_funcSet_t *funcP){
 
+	int i = 0;
 	if(!funcP)
 		return HASHTB_RET_FAIL;
 
@@ -117,6 +129,11 @@ int hash_funcSet_reg(hashTb_funcSet_t *funcP){
 	funcP->conf_get = hashTb_conf_get;
 	funcP->conf_set = hashTb_conf_set;
 	funcP->conf_getall = hashTb_conf_getall;
+	funcP->conf_clear = hashTb_conf_clear;
+
+	for (i = 0; i < CONFIG_HASH_SIZE; i++) {
+		INIT_LIST(&gConfigHashTable[i]);
+	}
 
 	return HASHTB_RET_SUCCESS;
 }
@@ -136,9 +153,9 @@ struct config *find_config(char *key){
 	struct list_head *head = &gConfigHashTable[hash_config(key)];
 	struct list_head *fList;
 
-	LIST_CHECK(head);
+	LIST_CHECK(head,NULL);
 	LIST_FOR_EACH(fList, head) {
-		LIST_CHECK(fList);
+		LIST_CHECK(fList,NULL);
 		LIST_CHECK_KEY(((struct config *)fList)->key);
 		if (!strcmp(key, ((struct config *)fList)->key)) {
 			return ((struct config *)fList);
@@ -164,9 +181,9 @@ static struct list_head *find_uncompleted_config(char *key){
 	struct list_head *head = &gConfigHashTable[hash_config(key)];
 	struct list_head *fList;
 
-	LIST_CHECK(head);
+	LIST_CHECK(head,NULL);
 	LIST_FOR_EACH(fList, head) {
-		LIST_CHECK(fList);
+		LIST_CHECK(fList,NULL);
 		if (((struct config *)fList)->stat == NOT_COMPLETED) {
 			return fList;
 		}
@@ -179,9 +196,9 @@ static int find_hash_entry_idx(char *key){
 	struct list_head *head = &gConfigHashTable[hash_config(key)];
 	struct list_head *fList;
 
-	LIST_CHECK(head);
+	LIST_CHECK(head,0);
 	LIST_FOR_EACH(fList, head) {
-		LIST_CHECK(fList);
+		LIST_CHECK(fList,idx);
 		idx++;
 	}
 	return idx;
@@ -190,9 +207,11 @@ static int find_hash_entry_idx(char *key){
 static char *hashTb_conf_get(char *key){
 	struct config *pConf;
 
+	SYNC_FLAG_NOT_YET_CHECK
+
 	pConf = find_config(key);
 	if (!pConf) {
-		DEBUG_PRINT("get Empty (key:%s)\n",key);
+		DEBUG_PRINT("get Empty (key:%s idx:%d)\n",key,hash_config(key));
 		return NULL;
 	}
 	DEBUG_PRINT("key:%s (%d_%d)value:%s\n",key,hash_config(key),pConf->idx,pConf->value);
@@ -220,19 +239,19 @@ static int hashTb_initNode_set(int key,int idx, char *value){
 
 	vLen = strlen(value);
 
-	pConf = kmalloc(GFP_KERNEL,sizeof(struct config));
+	pConf = MALLOC(sizeof(struct config));
 	if (!pConf) {
 		DEBUG_PRINT("Can't malloc for runtime configuration !!");
 		return HASHTB_RET_FAIL;
 	}
 
-	linebuf = kmalloc(GFP_KERNEL,vLen+1);
+	linebuf = MALLOC(vLen+1);
 	if (!linebuf) {
 		kfree(pConf);
 		DEBUG_PRINT("Can't malloc for line of runtime configuration !!");
 		return HASHTB_RET_FAIL;
 	}
-	memset(linebuf,'\0',vLen+1);
+	memset(linebuf,'\0',ALIGN_32B(vLen+1));
 
 	INIT_LIST(&pConf->next);
 	pConf->key = NULL;
@@ -256,11 +275,15 @@ static int hashTb_conf_runtime_set(char *key, char *value){
 	vLen = strlen(value);
 
 	if((fList = find_uncompleted_config(key))!=NULL){
-		((struct config *)fList)->key = kmalloc(GFP_KERNEL,kLen+1);
+		((struct config *)fList)->key = MALLOC(kLen+1);
+		if(!((struct config *)fList)->key){
+			return HASHTB_RET_FAIL;
+		}
 		//((struct config *)fList)->key = &tmpMemPool[bufIdx];
 		//bufIdx = bufIdx + kLen+1;
+		memset(((struct config *)fList)->key,'\0',ALIGN_32B(kLen+1));
 		strcpy(((struct config *)fList)->key, key);
-#if 0
+#if 1
 		DEBUG_PRINT("set completed key:%s ->%d_%d (value:%s)",((struct config *)fList)->key,hash_config(key),\
 				((struct config *)fList)->idx,((struct config *)fList)->value);
 #endif
@@ -268,41 +291,43 @@ static int hashTb_conf_runtime_set(char *key, char *value){
 	}
 	else{
 		/*
-		 * If gInitFlag was set, it presents that the configuration would like to be set after
+		 * If SYNC_FLAG_DONE, it presents that the configuration would like to be set after
 		 * Hash table initialization. It also means that the configuration
-		 * doesn't exist in Hash table at first. Per our Config Shrink mechaniasm,this kind of
+		 * doesn't exist in Hash table by default. Per our Config Shrink mechaniasm,this kind of
 		 * configuration have to be written to flash in plan text. Return fail and do
 		 * the alternative path to memory.
 		 */
 #if 1
-		if(gInitFlag){
-			return HASHTB_RET_FAIL;
-		}
+		SYNC_FLAG_DONE_CHECK
 #endif
-		pConf = kmalloc(GFP_KERNEL,sizeof(struct config));
+		pConf = MALLOC(sizeof(struct config));
 		if (!pConf) {
 			DEBUG_PRINT("Can't malloc for runtime configuration !!");
 			return HASHTB_RET_FAIL;
 		}
 
-		pConf->key = kmalloc(GFP_KERNEL,kLen+1);
+		pConf->key = MALLOC(kLen+1);
 		if (!pConf->key) {
 			kfree(pConf);
 			DEBUG_PRINT("Can't malloc for line of runtime configuration !!");
 			return HASHTB_RET_FAIL;
 		}
+		memset(pConf->key,'\0',ALIGN_32B(kLen+1));
 		strcpy(pConf->key, key);
 
-		pConf->value = kmalloc(GFP_KERNEL,vLen+1);
-		if (!pConf->key) {
+		pConf->value = MALLOC(vLen+1);
+		if (!pConf->value) {
 			kfree(pConf);
 			DEBUG_PRINT("Can't malloc for line of runtime configuration !!");
 			return HASHTB_RET_FAIL;
 		}
+		memset(pConf->value,'\0',ALIGN_32B(vLen+1));
 		strcpy(pConf->value, value);
 
 		INIT_LIST(&pConf->next);
 		pConf->idx = find_hash_entry_idx(key);
+		pConf->stat = INIT_COMPLETED;
+		DEBUG_PRINT("%s:k:%s v:%s (idx:%d ridx:%d)\n",__func__,pConf->key,pConf->value,hash_config(pConf->key),pConf->idx);
 
 		list_add_tail(&pConf->next, &gConfigHashTable[hash_config(pConf->key)]);
 	}
@@ -312,7 +337,7 @@ static int hashTb_conf_runtime_set(char *key, char *value){
 
 static int hashTb_conf_set(char *key, char *value){
 	//char *reline;
-	//size_t kLen, vLen;
+	//size_t vLen;
 
 	struct config *pConf = find_config(key);
 
@@ -329,7 +354,10 @@ static int hashTb_conf_set(char *key, char *value){
 	if (strcmp(pConf->value, value) == 0) {
 		return HASHTB_RET_SUCCESS;
 	}
-	strcpy(pConf->value, value);
+	//memset(pConf->value,'\0',ALIGN_32B(vLen+1));
+	//strcpy(pConf->value, value);
+	kfree(pConf->value);
+	pConf->value = kstrdup(value, GFP_KERNEL);
 	//printk("%s end\n",__func__);
 	return HASHTB_RET_SUCCESS;
 }
@@ -369,10 +397,10 @@ static int hashTb_header_identify(char *data, int *retLen){
 
 static int hashTb_conf_init(char **data,int len){
 
-	int i,l,header_exist,hashKey,idx;
+	int l,header_exist,hashKey,idx;
 	char *key,*value,*p,*q;
 
-	i = l = header_exist = hashKey = idx = 0;
+	l = header_exist = hashKey = idx = 0;
 	key = value = p = q = NULL;
 
 	if(!(*data))
@@ -380,15 +408,16 @@ static int hashTb_conf_init(char **data,int len){
 
 	p = *data;
 #if 1
+	/*
+	 * identify if shrinked config existed in flash or not.
+	 * If it has not, it has to establish HASH strcutures in memory and wait to commit
+	 * */
 	if(hashTb_header_identify(p,&l)){
 		header_exist = 1;
 		p += l;
 	}
 	DEBUG_PRINT("header %d! - len:%d nowp:%d ori len:%d\n",header_exist,l,p - (*data) + 1,len);
 #endif
-	for (i = 0; i < CONFIG_HASH_SIZE; i++) {
-		INIT_LIST(&gConfigHashTable[i]);
-	}
 	while((p - (*data) + 1) < len){
 		if (NULL == (q = strchr(p, '='))) {
 			DEBUG_PRINT("parsed failed - cannot find '='\n");
@@ -406,8 +435,9 @@ static int hashTb_conf_init(char **data,int len){
 			if (!strcmp(key, CONFIG_SHRINK_TAIL_IDENTIFIER)) {
 				if (!strcmp(value, "1")){
 					DEBUG_PRINT("TAIL IDENTIFIED !! \n");
-
+					p = q + 1; //next entry
 					*data = p;
+					SYNC_FLAG_SET(1)
 					return HASHTB_RET_SUCCESS;
 				}
 			}
@@ -434,15 +464,71 @@ static int hashTb_conf_init(char **data,int len){
 #endif
 	return HASHTB_RET_SUCCESS;
 }
+static int hashTb_conf_clear(void){
+	int i,idx;
+	struct list_head *head,*fList;
+	char *key,*value,*p;
+	static int oneShot = 0;
 
-static int hashTb_conf_getall(char **data,int len,int maxLen,int target){
+	/*
+	 * dont clear the hash after the 1st time called by libnvram when it can not get WebInit.
+	 * cuz the hash table have been established and waited for loading default setting.
+	 *
+	 * */
+	if(!oneShot){
+		if(gSyncFlag)
+			oneShot = 1;
+		return HASHTB_RET_FAIL;
+	}
+	i = idx = 0;
+	head = fList = NULL;
+	key = value = p = NULL;
+	DEBUG_PRINT("hashTb_conf_clear \n");
+	for(i = 0;i < CONFIG_HASH_SIZE; i++){
+		head = &gConfigHashTable[i];
+#if 0
+		LIST_FOR_EACH(fList, head) {
+			LIST_CHECK(fList);
+			if(!fList)
+				continue;
+
+			list_del(fList);
+			key = ((struct config *)fList)->key;
+			value = ((struct config *)fList)->value;
+			if(key)
+				kfree(key);
+			if(value)
+				kfree(value);
+			if(fList)
+				kfree(fList);
+		}
+#else
+		while(((head)->next) && ((head)->next != head)){
+			fList = (head)->next;
+			list_del(fList);
+			key = ((struct config *)fList)->key;
+			value = ((struct config *)fList)->value;
+			if(key)
+				kfree(key);
+			if(value)
+				kfree(value);
+			if(fList)
+				kfree(fList);
+		}
+#endif
+	}
+	SYNC_FLAG_SET(0)
+	DEBUG_PRINT("Done \n");
+	return HASHTB_RET_SUCCESS;
+}
+static int hashTb_conf_getall(char **data,int maxLen,int target){
 
 
-	int i,l,idx;
+	int i,l,idx,confLen;
 	struct list_head *head,*fList;
 	char *key,*value,*p;
 
-	i = l = idx = 0;
+	i = l = idx = confLen= 0;
 	head = fList = NULL;
 	key = value = p = NULL;
 
@@ -455,18 +541,23 @@ static int hashTb_conf_getall(char **data,int len,int maxLen,int target){
 	//memset(*data,0,len);
 	p = *data;
 
+	DEBUG_PRINT(":Get All!!");
 	if(target == HASH_2_FLASH){
 		l = strlen(CONFIG_SHRINK_HEAD_IDENTIFIER) + 3;
 		snprintf(p,l,"%s=1",CONFIG_SHRINK_HEAD_IDENTIFIER);
-		DEBUG_PRINT("(C) %s - Len:%d\n",p,len);
+		DEBUG_PRINT("(C) %s - Len:%d\n",p,maxLen);
 		p += l;
+		confLen += l;
 	}
+	else{
+		SYNC_FLAG_NOT_YET_CHECK
+	}
+
 	for(i = 0;i < CONFIG_HASH_SIZE; i++){
 		head = &gConfigHashTable[i];
 		LIST_FOR_EACH(fList, head) {
-			LIST_CHECK(fList);
 			if(!fList)
-				continue;
+				break;
 			key = ((struct config *)fList)->key;
 			idx = ((struct config *)fList)->idx;
 			value = ((struct config *)fList)->value;
@@ -499,7 +590,7 @@ static int hashTb_conf_getall(char **data,int len,int maxLen,int target){
 			default:
 				return HASHTB_RET_FAIL;
 			}
-
+			confLen += l;
 			p += l;
 		}
 #ifdef HASH_STAT_DBG
@@ -510,10 +601,11 @@ static int hashTb_conf_getall(char **data,int len,int maxLen,int target){
 	if(target == HASH_2_FLASH){
 		l = strlen(CONFIG_SHRINK_TAIL_IDENTIFIER) + 3;
 		snprintf(p,l,"%s=1",CONFIG_SHRINK_TAIL_IDENTIFIER);
-		DEBUG_PRINT("(C) %s - Len:%d\n",p,len);
 		p += l;
+		confLen += l;
+		DEBUG_PRINT("(C) %s - actual Len:%x maxLen:%x\n",p,confLen,maxLen);
 		*data = p;
-		gInitFlag = 1;
+		SYNC_FLAG_SET(1)
 		return HASHTB_RET_SUCCESS;
 	}
 

@@ -22,7 +22,7 @@
 
 #include "upnpreplyparse.h"
 
-int wsc_debug_level = RT_DBG_INFO;
+int wsc_debug_level = RT_DBG_OFF;
 
 int ioctl_sock = -1;
 unsigned char UUID[16]= {0};

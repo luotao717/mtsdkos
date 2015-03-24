@@ -30,20 +30,20 @@ void tr069(char *input){
     //caCf = strdup(web_get("caCf", input, 1));		
     //cCif = strdup(web_get("cCif", input, 1));	
     
-		nvram_bufset(CONFIG2_NVRAM , "TR_ENABLE", tr069Enable);    
-		nvram_bufset(CONFIG2_NVRAM , "TR_CLIENT_PORT", fixed_client_port);        
-		nvram_bufset(CONFIG2_NVRAM , "TR_ACS_URL", acs_server_url);   
-		nvram_bufset(CONFIG2_NVRAM , "TR_BOOTSTRAP", bootstrapEnable);		
-		nvram_bufset(CONFIG2_NVRAM , "TR_ACS_USER", acs_usemame);		
-		nvram_bufset(CONFIG2_NVRAM , "TR_ACS_PASS", acs_password);					    	
-		nvram_bufset(CONFIG2_NVRAM , "TR_INFORM_ENABLE", periodicalEnable);		
-		nvram_bufset(CONFIG2_NVRAM , "TR_INFORM_INTERVAL", periodicalInterval);	
-		nvram_bufset(CONFIG2_NVRAM , "TR_CR_USER", connectionRequsetUse);
-		nvram_bufset(CONFIG2_NVRAM , "TR_CR_PASS", connectionPassword);
+		nvram_bufset(VOIP_NVRAM , "TR_ENABLE", tr069Enable);
+		nvram_bufset(VOIP_NVRAM , "TR_CLIENT_PORT", fixed_client_port);
+		nvram_bufset(VOIP_NVRAM , "TR_ACS_URL", acs_server_url);
+		nvram_bufset(VOIP_NVRAM , "TR_BOOTSTRAP", bootstrapEnable);
+		nvram_bufset(VOIP_NVRAM , "TR_ACS_USER", acs_usemame);
+		nvram_bufset(VOIP_NVRAM , "TR_ACS_PASS", acs_password);
+		nvram_bufset(VOIP_NVRAM , "TR_INFORM_ENABLE", periodicalEnable);
+		nvram_bufset(VOIP_NVRAM , "TR_INFORM_INTERVAL", periodicalInterval);
+		nvram_bufset(VOIP_NVRAM , "TR_CR_USER", connectionRequsetUse);
+		nvram_bufset(VOIP_NVRAM , "TR_CR_PASS", connectionPassword);
 		//nvram_bufset(VOIP_NVRAM, "TR_CR_PATH", caCf);
 		//nvram_bufset(VOIP_NVRAM, "TR_CR_PASS", cCif);		
 				
-    nvram_commit(CONFIG2_NVRAM );
+    nvram_commit(VOIP_NVRAM );
 	  free_all(12, tr069Enable, fixed_client_port, acs_server_url, bootstrapEnable, acs_usemame, acs_password, periodicalEnable, periodicalInterval, connectionRequsetUse, connectionPassword, caCf, cCif);	
 	
 }
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 	char *form, *inStr;
 	long inLen;
 
-	nvram_init(CONFIG2_NVRAM );
+	nvram_init(VOIP_NVRAM );
 
 	inLen = strtol(getenv("CONTENT_LENGTH"), NULL, 10) + 1;
 	if (inLen <= 1) {
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 
 	free(inStr);
 leave:	
-	nvram_close(CONFIG2_NVRAM );
+	nvram_close(VOIP_NVRAM );
 
 	return 0;
 }

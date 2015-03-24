@@ -105,6 +105,7 @@ unsigned int CFG_BLOCKSIZE;
 #define NAND_MTD_ROOTFS_PARTITION_NO            5
 #endif
 static int shift_on_bbt = 0;
+static int is_skip_bad_block(struct mtd_info *mtd, int page);
 extern void nand_bbt_set(struct mtd_info *mtd, int page, int flag);
 extern int nand_bbt_get(struct mtd_info *mtd, int page);
 int mtk_nand_read_oob_hw(struct mtd_info *mtd, struct nand_chip *chip, int page);
@@ -879,7 +880,10 @@ static bool mtk_nand_check_bch_error(struct mtd_info *mtd, u8 * pDataBuf, u32 u4
         }
         if ((correct_count > 2) && bRet)
         {
-            mtd->ecc_stats.corrected++;
+#if defined(SKIP_BAD_BLOCK)
+		if (!is_skip_bad_block(mtd, u4PageAddr))
+#endif
+            		mtd->ecc_stats.corrected++;
         } else
         {
             printk(KERN_INFO "Less than 2 bit error, ignore\n");
@@ -911,10 +915,16 @@ static bool mtk_nand_check_bch_error(struct mtd_info *mtd, u8 * pDataBuf, u32 u4
                     u4ErrByteLoc = u4ErrBitLoc1th / 8;
                     u4BitOffset = u4ErrBitLoc1th % 8;
                     pDataBuf[u4ErrByteLoc] = pDataBuf[u4ErrByteLoc] ^ (1 << u4BitOffset);
-                    mtd->ecc_stats.corrected++;
+#if defined(SKIP_BAD_BLOCK)
+		    if (!is_skip_bad_block(mtd, u4PageAddr))
+#endif
+                        mtd->ecc_stats.corrected++;
                 } else
                 {
-                    mtd->ecc_stats.failed++;
+#if defined(SKIP_BAD_BLOCK)
+		    if (!is_skip_bad_block(mtd, u4PageAddr))
+#endif
+                    mtd->ecc_stats.corrected++;
                     //printk(KERN_ERR"UnCorrectable ErrLoc=%d\n", au4ErrBitLoc[i]);
                 }
                 u4ErrBitLoc2nd = (au4ErrBitLoc[i] >> 16) & 0x1FFF;
@@ -925,10 +935,16 @@ static bool mtk_nand_check_bch_error(struct mtd_info *mtd, u8 * pDataBuf, u32 u4
                         u4ErrByteLoc = u4ErrBitLoc2nd / 8;
                         u4BitOffset = u4ErrBitLoc2nd % 8;
                         pDataBuf[u4ErrByteLoc] = pDataBuf[u4ErrByteLoc] ^ (1 << u4BitOffset);
-                        mtd->ecc_stats.corrected++;
+#if defined(SKIP_BAD_BLOCK)
+			if (!is_skip_bad_block(mtd, u4PageAddr))
+#endif
+                            mtd->ecc_stats.corrected++;
                     } else
                     {
-                        mtd->ecc_stats.failed++;
+#if defined(SKIP_BAD_BLOCK)
+		    	if (!is_skip_bad_block(mtd, u4PageAddr))
+#endif
+                        mtd->ecc_stats.corrected++;
                         //printk(KERN_ERR"UnCorrectable High ErrLoc=%d\n", au4ErrBitLoc[i]);
                     }
                 }
@@ -2335,7 +2351,10 @@ static int block_remap(struct mtd_info *mtd, int block)
 
 int check_block_remap(struct mtd_info *mtd, int block)
 {
-	if (shift_on_bbt)
+	struct nand_chip *chip = mtd->priv;
+	int page_per_block_bit = chip->phys_erase_shift - chip->page_shift;
+
+	if ((shift_on_bbt) && (is_skip_bad_block(mtd, (block << page_per_block_bit))))
 		return  block_remap(mtd, block);
 	else
 		return block;

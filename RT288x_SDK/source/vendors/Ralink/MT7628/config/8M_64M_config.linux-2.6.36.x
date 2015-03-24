@@ -1096,25 +1096,7 @@ CONFIG_USB_STORAGE=y
 # CONFIG_UWB is not set
 
 
-CONFIG_MMC=y
-# CONFIG_MMC_DEBUG is not set
-# CONFIG_MMC_UNSAFE_RESUME is not set
-
-#
-# MMC/SD/SDIO Card Drivers
-#
-CONFIG_MMC_BLOCK=y
-CONFIG_MMC_BLOCK_BOUNCE=y
-# CONFIG_SDIO_UART is not set
-# CONFIG_MMC_TEST is not set
-#
-# MMC/SD/SDIO Host Controller Drivers
-#
-# CONFIG_MMC_SDHCI is not set
-CONFIG_MTK_MMC=y
-# CONFIG_MTK_AEE_KDUMP is not set
-# CONFIG_MTK_MMC_CD_POLL is not set
-# CONFIG_MTK_MMC_EMMC_8BIT is not set
+# CONFIG_MMC is not set
 # CONFIG_MEMSTICK is not set
 # CONFIG_NEW_LEDS is not set
 # CONFIG_ACCESSIBILITY is not set

@@ -176,7 +176,7 @@ function recIpCfg()
 
 <tr>
   <td class="head" id="Subscriber_Number">Subscriber Number </td>
-  <td><input name="subscriber_number" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_ACCT_2_SIP_USERNAME"-->"></td>
+  <td><input name="subscriber_number2" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_ACCT_2_SIP_USERNAME"-->"></td>
 </tr>
 
 
@@ -187,12 +187,12 @@ function recIpCfg()
 
 <tr>
   <td class="head" id="authentication_name">Authentication Name</td>
-  <td><input name="auth_name2" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_ACCT_1_SIP_AUTHNAME"-->" ></td>
+  <td><input name="auth_name2" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_ACCT_2_SIP_AUTHNAME"-->" ></td>
 </tr>
 
 <tr>
   <td class="head" id="sip_password">Password/td>
-  <td><input name="s_password2" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_ACCT_1_SIP_PASSWORD"-->" ></td>
+  <td><input name="s_password2" maxlength=15 value="<!--#exec cmd="web config2 nvram SC_ACCT_2_SIP_PASSWORD"-->" ></td>
 </tr>
 
 

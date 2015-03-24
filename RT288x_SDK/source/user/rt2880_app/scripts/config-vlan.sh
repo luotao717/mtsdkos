@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/rt2880_app/scripts/config-vlan.sh#1 $
+# $Id: //WIFI_SOC/MP/SDK_4_3_0_0/RT288x_SDK/source/user/rt2880_app/scripts/config-vlan.sh#2 $
 #
 # usage: config-vlan.sh <switch_type> <vlan_type>
 #   switch_type: 0=IC+, 1=vtss
@@ -162,13 +162,13 @@ config7530Esw()
 	    echo "Special Tag Enabled"
 		switch_7530 reg w 2610 81000020 #port6
 		#VLAN member port
-		switch_7530 vlan set  1 1000001
-		switch_7530 vlan set  2 0100001
-		switch_7530 vlan set  3 0010001
-		switch_7530 vlan set  4 0001001
-		switch_7530 vlan set  5 0000101
-		switch_7530 vlan set  6 0000011
-		switch_7530 vlan set  7 0000011
+		switch_7530 vlan set  0 1 10000010
+		switch_7530 vlan set  0 2 01000010
+		switch_7530 vlan set  0 3 00100010
+		switch_7530 vlan set  0 4 00010010
+		switch_7530 vlan set  0 5 00001010
+		switch_7530 vlan set  0 6 00000110
+		switch_7530 vlan set  0 7 00000110
 	else
 	    echo "Special Tag Disabled"
 		switch_7530 reg w 2610 81000000 #port6
@@ -184,14 +184,14 @@ config7530Esw()
 		switch_7530 reg w 2414 10008 #port4
 		switch_7530 reg w 2514 10007 #port5
 		#VLAN member port
-		switch_7530 vlan set 0 1 1000001
-		switch_7530 vlan set 1 2 0100001
-		switch_7530 vlan set 2 3 0010001
-		switch_7530 vlan set 3 4 0001001
-		switch_7530 vlan set 4 5 0000101
-		switch_7530 vlan set 5 6 0000011
-		switch_7530 vlan set 6 7 1111011
-		switch_7530 vlan set 7 8 0000101
+		switch_7530 vlan set 0 1 10000010
+		switch_7530 vlan set 0 2 01000010
+		switch_7530 vlan set 0 3 00100010
+		switch_7530 vlan set 0 4 00010010
+		switch_7530 vlan set 0 5 00001010
+		switch_7530 vlan set 0 6 00000110
+		switch_7530 vlan set 0 7 11110110
+		switch_7530 vlan set 0 8 00001010
 		else
 		#set PVID
 		switch_7530 reg w 2014 10001 #port0
@@ -201,8 +201,8 @@ config7530Esw()
 		switch_7530 reg w 2414 10002 #port4
 		switch_7530 reg w 2514 10001 #port5
 		#VLAN member port
-		switch_7530 vlan set  1 1111011
-		switch_7530 vlan set  2 0000101
+		switch_7530 vlan set  0 1 11110110
+		switch_7530 vlan set  0 2 00001010
 		fi
 	elif [ "$1" = "WLLLL" ]; then
 		if [ "$CONFIG_RAETH_SPECIAL_TAG" == "y" ]; then
@@ -214,14 +214,14 @@ config7530Esw()
 		switch_7530 reg w 2414 10007 #port4
 		switch_7530 reg w 2514 10007 #port5
 		#VLAN member port
-		switch_7530 vlan set  5 1000001
-		switch_7530 vlan set  1 0100001
-		switch_7530 vlan set  2 0010001
-		switch_7530 vlan set  3 0001001
-		switch_7530 vlan set  4 0000101
-		switch_7530 vlan set  6 0000011
-		switch_7530 vlan set  7 0111111
-		switch_7530 vlan set  8 1000001
+		switch_7530 vlan set  0 5 10000010
+		switch_7530 vlan set  0 1 01000010
+		switch_7530 vlan set  0 2 00100010
+		switch_7530 vlan set  0 3 00010010
+		switch_7530 vlan set  0 4 00001010
+		switch_7530 vlan set  0 6 00000110
+		switch_7530 vlan set  0 7 01111110
+		switch_7530 vlan set  0 8 10000010
 		else
 		#set PVID
 		switch_7530 reg w 2014 10002 #port0
@@ -231,8 +231,8 @@ config7530Esw()
 		switch_7530 reg w 2414 10001 #port4
 		switch_7530 reg w 2514 10001 #port5
 		#VLAN member port
-		switch_7530 vlan set  1 0111111
-		switch_7530 vlan set  2 1000001
+		switch_7530 vlan set  0 1 01111110
+		switch_7530 vlan set  0 2 10000010
 		fi
 	elif [ "$1" = "W1234" ]; then
 		echo "W1234"
@@ -244,12 +244,12 @@ config7530Esw()
 		switch_7530 reg w 2414 10004 #port4
 		switch_7530 reg w 2514 10006 #port5
 		#VLAN member port
-		switch_7530 vlan set  5 1000001
-		switch_7530 vlan set  1 0100001
-		switch_7530 vlan set  2 0010001
-		switch_7530 vlan set  3 0001001
-		switch_7530 vlan set  4 0000101
-		switch_7530 vlan set  6 0000011
+		switch_7530 vlan set  0 5 10000010
+		switch_7530 vlan set  0 1 01000010
+		switch_7530 vlan set  0 2 00100010
+		switch_7530 vlan set  0 3 00010010
+		switch_7530 vlan set  0 4 00001010
+		switch_7530 vlan set  0 6 00000110
 	   
 	elif [ "$1" = "12345" ]; then
 		echo "12345"
@@ -261,12 +261,12 @@ config7530Esw()
 		switch_7530 reg w 2414 10005 #port4
 		switch_7530 reg w 2514 10006 #port5
 		#VLAN member port
-		switch_7530 vlan set  1 1000001
-		switch_7530 vlan set  2 0100001
-		switch_7530 vlan set  3 0010001
-		switch_7530 vlan set  4 0001001
-		switch_7530 vlan set  5 0000101
-		switch_7530 vlan set  6 0000011
+		switch_7530 vlan set  0 1 10000010
+		switch_7530 vlan set  0 2 01000010
+		switch_7530 vlan set  0 3 00100010
+		switch_7530 vlan set  0 4 00010010
+		switch_7530 vlan set  0 5 00001010
+		switch_7530 vlan set  0 6 00000110
 	elif [ "$1" = "GW" ]; then
 		echo "GW"
 		#set PVID
@@ -277,8 +277,8 @@ config7530Esw()
 		switch_7530 reg w 2414 10001 #port4
 		switch_7530 reg w 2514 10002 #port5
 		#VLAN member port
-		switch_7530 vlan set  1 1111101
-		switch_7530 vlan set  2 0000011
+		switch_7530 vlan set  0 1 11111010
+		switch_7530 vlan set  0 2 00000110
 	fi
 
 	#clear mac table if vlan configuration changed
@@ -517,6 +517,7 @@ restore7530Esw()
 	
 	#clear mac table if vlan configuration changed
 	switch_7530 clear
+	switch_7530 vlan clear
 }
 
 restore6855Esw()
@@ -544,6 +545,7 @@ restore6855Esw()
 	
 	#clear mac table if vlan configuration changed
 	switch clear
+	switch vlan clear
 }
 restoreEsw()
 {

@@ -1,5 +1,50 @@
 Mediatek APSoC SDK - History
 
+Version 4.3.1.0
+===============
+
+IMPROVEMENT:
+- Add MX25L51245G(64MB) to MT7620's SPI NOR flash QVL.
+- Add MX25L51245G(64MB)/MT25QL512AB(64MB)/W25Q256FV(32MB)/ N25Q256A(32MB) to RT6856/MT7621/MT7628's SPI NOR flash QVL.
+- Add MT7628 4M/16M profile.
+- Add dump_mt7530_phy application. (for MT7621, MT7623 and MT7620+MT7530).
+- For MT7628 if not support PCIe, degrade PCIe PHY to 1.3mA for power saving.
+- Update mii_mgr_cl45 usage and print format.
+- Add user mode watchdog menu and Makefile into linux-3.10.14.
+- Add MT7621 pcie SSC option and Disable SSC by default to avoid MT7603 Ch14 Rx De-sense.
+- For MT7628, turn on FC by default.
+- Add ALSA Full Duplex mode support.
+- Fix MT7628 wifi de-sense issue which was caused by SDXC in Normal mode(AP mode).
+- Add Samba version 4.0.24
+
+
+BUG FIXED:
+- Fix VOIP configuration crash issue.
+- Fix MT7621 NAND flash page read API to return error code when correcting some correctable ECC bits, this may fix some problems such as failed to mount SQUASHFS file system when correcting error ECC bits.
+- ALSA fix error of Coding shrink.
+- Fix MT7628 Ethernet sometimes has little spur in current domain.
+- For MT7621, if hw_nat enables IPv6 acceleration, entries across dram boundary are bad.  These entries must be set as static.
+- HNAT module use wrong setting when removing HNAT module. This register should be controlled by Ethernet driver not HNAT module.
+- Choose HNAT_USE_SKB_CB for OpenWrt.
+- Update skb allocation API for kernel 3.10.
+- For MT7628 turn off EEE TX/RX support by default.
+- For MT7628 Remove duplicated long_loop excution in rcS.
+- Fix Wrong GPIO setting in MT7628 Ethernet driver.
+- Add line2 configuration in VOIP web page.
+- Remove VOIP software from current SDK, and separately relaese in another software package.
+
+
+Uboot :
+- Add MX25L51245G(64MB) to MT7620's SPI NOR flash QVL.
+- Add MX25L51245G(64MB)/MT25QL512AB(64MB)/W25Q256FV(32MB)/ N25Q256A(32MB) to RT6856/MT7621/MT7628's SPI NOR flash QVL.
+- Support MT7628 tiny Uboot.
+- Add MT7628 DDR DQS window calibration.
+- Change EPHY setting to fix MT7628 Ethernet sometimes has little spur in current domain.
+- Support MT7628 ETH One Port Only mode.
+- Automatic set share pin register when Uboot detect EEPROM PA/LNA config is ePAeLNA/iPAeLNA/ePAiLNA.
+- support MT7621 dual image.
+
+
 Version 4.3.0.0
 ===============
 

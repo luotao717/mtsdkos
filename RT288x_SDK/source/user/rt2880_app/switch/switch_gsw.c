@@ -88,7 +88,7 @@ void usage(char *cmd)
 	printf(" %s tag on [port]                        - keep vlan tag for egress packet on prot 0~4\n", cmd); 
 	printf(" %s tag off [port]                       - remove vlan tag for egress packet on port 0~4\n", cmd);
 	printf(" %s vlan dump                            - dump switch table\n", cmd);
-#if defined (CONFIG_RALINK_MT7621)
+#if defined (CONFIG_RALINK_MT7621) || defined(SWITCH_7530)
 	printf(" %s vlan set [vlan idx (NULL)][vid] [portmap]  - set vlan id and associated member\n", cmd);
 #else
 	printf(" %s vlan set [vlan idx] [vid] [portmap]  - set vlan id and associated member\n", cmd);
@@ -98,7 +98,7 @@ void usage(char *cmd)
 	exit(0);
 }
 
-#if defined (CONFIG_RALINK_MT7621)
+#if defined (CONFIG_RALINK_MT7621) || defined(SWITCH_7530)
 int reg_read(int offset, int *value)
 {
 	struct ifreq ifr;
@@ -1818,7 +1818,7 @@ void table_dump(void)
 	}
 
 	reg_write(REG_ESW_WT_MAC_ATC, 0x8004);
-#if defined (CONFIG_RALINK_MT7620) || defined (CONFIG_RALINK_MT7621)
+#if defined (CONFIG_RALINK_MT7620) || defined (CONFIG_RALINK_MT7621) || defined (CONFIG_ARCH_MT8590)
 	printf("hash  port(0:6)   fid   vid  age   mac-address     filter my_mac\n");
 #else
 	printf("hash  port(0:6)   fid   vid  age   mac-address     filter\n");
@@ -1848,7 +1848,7 @@ void table_dump(void)
 				reg_read(REG_ESW_TABLE_TSRA1, &mac);
 				printf("  %08x", mac);
 				printf("%04x", ((mac2 >> 16) & 0xffff));
-#if defined (CONFIG_RALINK_MT7620) || defined (CONFIG_RALINK_MT7621)
+#if defined (CONFIG_RALINK_MT7620) || defined (CONFIG_RALINK_MT7621) || defined (CONFIG_ARCH_MT8590) 
 				printf("     %c", (((value2 >> 20) & 0x03)== 0x03)? 'y':'-');
 				printf("     %c\n", (((value2 >> 23) & 0x01)== 0x01)? 'y':'-');
 #else
@@ -2105,7 +2105,7 @@ void set_mirror_from(int argc, char *argv[])
 
 }
 
-#if defined (CONFIG_RALINK_MT7621)
+#if defined (CONFIG_RALINK_MT7621) || defined (SWITCH_7530) || defined (CONFIG_ARCH_MT8590)
 void vlan_dump(void)
 {
 	int i, j, vid, value, value2;
@@ -2288,9 +2288,37 @@ void vlan_dump(void)
 
 #endif
 
+void vlan_clear(int argc, char *argv[])
+{
+	unsigned int i, j, value, value2;
+	int idx, vid;
+	
+	for (vid = 0; vid < 16; vid++) {
+	
+	value = 0;//invalid
+	reg_write(REG_ESW_VLAN_VAWD1, value);
+
+	value = (0x80001000 + vid);  //w_vid_cmd
+	reg_write(REG_ESW_VLAN_VTCR, value);
 
 
-#if defined (CONFIG_RALINK_MT7621)
+	for (j = 0; j < 300; j++) {
+		usleep(1000);
+		reg_read(REG_ESW_VLAN_VTCR, &value);
+		if ((value & 0x80000000) == 0 ){ //table busy
+			break;
+		}
+	}
+
+	if (j == 300)
+		printf("config vlan timeout.\n");
+
+
+	}
+}
+
+
+#if defined (CONFIG_RALINK_MT7621) || defined (SWITCH_7530) || defined (CONFIG_ARCH_MT8590)
 void vlan_set(int argc, char *argv[])
 {
 	unsigned int i, j, value, value2;
@@ -2741,8 +2769,11 @@ int main(int argc, char *argv[])
 			vlan_dump();
 		else 
 #endif
-		    if (!strncmp(argv[2], "set", 4))
+		if (!strncmp(argv[2], "set", 4))
 			vlan_set(argc, argv);
+		else if (!strncmp(argv[2], "clear", 4))
+			vlan_clear(argc, argv);
+	
 		else
 			usage(argv[0]);
 	}

@@ -85,9 +85,7 @@ err:
 int rsp2host_eth(unsigned char *data, int size)
 {
 	struct ethhdr	*ehdr;
-	struct racfghdr *p_racfgh = (struct racfghdr *)&packet[ETH_HLEN];
 	struct sockaddr_ll socket_address;
-	unsigned char *header;
 	int result = 0;
 	int length = 0;
 

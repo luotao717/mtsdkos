@@ -337,6 +337,14 @@ function InsExtChOpt()
 
 function ChOnChange()
 {
+	if (document.wireless_basic.sz11gChannel.options.selectedIndex == 14) {
+		document.wireless_basic.n_bandwidth[0].checked = true;
+		document.wireless_basic.n_bandwidth[1].checked = false;
+		document.wireless_basic.n_bandwidth[1].disabled = true;
+		ChBwOnClick();
+	} else {
+		document.wireless_basic.n_bandwidth[1].disabled = false;
+	}
 	if (document.wireless_basic.n_bandwidth[1].checked == true)
 	{
 		var w_mode = document.wireless_basic.wirelessmode.options[document.wireless_basic.wirelessmode.selectedIndex].value;

@@ -1,8 +1,6 @@
-CFLAGS += -I$(ROOTDIR)/$(LINUXDIR)/include -I$(ROOTDIR)/lib/libnvram -I$(ROOTDIR)/config 
-ifeq ($(CONFIG_RALINK_PCMGPIO), y)
-ifeq ($(CONFIG_GDMA_EVERYBODY), y)
+CFLAGS += -I$(ROOTDIR)/lib/libnvram
+ifeq ($(CONFIG_MTK_VOIP), y)
 CFLAGS += -I$(ROOTDIR)/user/openssl-0.9.8e/include
-endif
 endif
 ifeq ($(CONFIG_WSC_INCLUDED), y)
 WFLAGS += -DRT2860_WSC_SUPPORT -DRTDEV_WSC_SUPPORT
@@ -93,14 +91,14 @@ endif
 ifneq ($(findstring $(CONFIG_RT_FIRST_CARD), 5592 3593 3572 5572),)
 WFLAGS += -DRT2860_ABAND_SUPPORT
 endif
-ifneq ($(findstring $(CONFIG_RT_FIRST_CARD), 7610 7612e 7612u),)
+ifneq ($(findstring $(CONFIG_RT_FIRST_CARD), 7610 7612 7637),)
 WFLAGS += -DRT2860_ABAND_SUPPORT -DRT2860_AC_SUPPORT
 endif
 WFLAGS += -DRTDEV_GBAND_SUPPORT
-ifneq ($(findstring $(CONFIG_RT_SECOND_CARD), 5592 3593 3572 5572 ),)
+ifneq ($(findstring $(CONFIG_RT_SECOND_CARD), 5592 3593 3572 5572),)
 WFLAGS += -DRTDEV_ABAND_SUPPORT
 endif
-ifneq ($(findstring $(CONFIG_RT_SECOND_CARD), 7610 7612e 7612u),)
+ifneq ($(findstring $(CONFIG_RT_SECOND_CARD), 7610 7612 7637),)
 WFLAGS += -DRTDEV_ABAND_SUPPORT -DRTDEV_AC_SUPPORT
 endif
 
@@ -126,18 +124,14 @@ LDFLAGS += -L$(ROOTDIR)/lib/libnvram -L.
 LDFLAGS += -L$(ROOTDIR)/user/openssl-0.9.8e -L.
 LDNVRAMLIB += -lnvram 
 LDWEBLIB += -lwebutil
-ifeq ($(CONFIG_RALINK_PCMGPIO), y)
-ifeq ($(CONFIG_GDMA_EVERYBODY), y)
+ifeq ($(CONFIG_MTK_VOIP), y)
 LDWEBLIB += -lcrypto -lssl
-endif
 endif
 
 GET_CGI = web
 SET_CGI = internet.cgi wireless.cgi makeRequest.cgi firewall.cgi adm.cgi
-ifeq ($(CONFIG_RALINK_PCMGPIO), y)
-ifeq ($(CONFIG_GDMA_EVERYBODY), y) 
+ifeq ($(CONFIG_MTK_VOIP), y)
 SET_CGI += voip.cgi tr069.cgi tr069upload_ca.cgi tr069upload_cc.cgi
-endif
 endif
 ifneq ($(findstring y, $(CONFIG_RALINKAPP_SWQOS)$(CONFIG_RALINKAPP_HWQOS)),)
 SET_CGI += qos.cgi
@@ -188,9 +182,6 @@ utils.o: utils.c
 
 $(WEBLIBS): utils.o
 	$(CC) -shared -Wl,-soname,$@ $(LDFLAGS) -o $@ $^ $(LDNVRAMLIB)
-ifeq ($(CONFIG_MTK_TR069), y)
-	make -C $(ROOTDIR)/user/openssl-0.9.8e all
-endif
 
 crc32.o: crc32.c
 	$(CC) $(CFLAGS) -DUSE_HOSTCC -c crc32.c -o $@

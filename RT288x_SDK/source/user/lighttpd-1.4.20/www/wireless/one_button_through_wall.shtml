@@ -83,7 +83,7 @@ function CheckValue()
 	</td>
 
 	<td>
-	<select id="obtw_enable" name="obtw_enable" size="1" onChange="QoSSelectChange()">
+	<select id="obtw_enable" name="obtw_enable" size="1">
 	<option value=0 id="obtw_disable">Disable</option>
 	<option value=1 id="obtw_enable">Enable</option>
 	</select>

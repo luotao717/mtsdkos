@@ -153,6 +153,12 @@ int RemoveVlanTag(struct sk_buff *skb)
 static int FoeAllocTbl(uint32_t NumOfEntry)
 {
 	uint32_t FoeTblSize;
+#if defined (CONFIG_RA_HW_NAT_IPV6) && defined (CONFIG_RALINK_MT7621)
+	struct FoeEntry *foe_entry;
+	int boundary_entry_offset[7] = {12, 25, 38, 51, 76, 89, 102};/*these entries are bad every 128 entries*/
+	int entry_base = 0;
+	int bad_entry, i, j;
+#endif	
 
 	FoeTblSize = NumOfEntry * sizeof(struct FoeEntry);
 
@@ -164,6 +170,18 @@ static int FoeAllocTbl(uint32_t NumOfEntry)
 
 	RegWrite(PPE_FOE_BASE, PpePhyFoeBase);
 	memset(PpeFoeBase, 0, FoeTblSize);
+
+#if defined (CONFIG_RA_HW_NAT_IPV6) && defined (CONFIG_RALINK_MT7621)
+	for(i=0; entry_base < NumOfEntry; i++) {
+		/* set bad entries as static*/
+		for(j=0;j<7;j++){
+			bad_entry = entry_base + boundary_entry_offset[j];
+			foe_entry = &PpeFoeBase[bad_entry];
+			foe_entry->udib1.sta = 1;
+		}
+		entry_base = (i+1)*128;
+	}
+#endif	
 
 	return 1;
 }
@@ -1241,6 +1259,11 @@ int32_t PpeParseLayerInfo(struct sk_buff * skb)
 				memcpy(&PpeParseResult.uh.dest, &uh->dest, sizeof(uh->dest));
 			}
 			PpeParseResult.pkt_type = IPV6_6RD;
+#if defined (CONFIG_RALINK_MT7620) || defined (CONFIG_RALINK_MT7621)
+			/* identification field in outer ipv4 header is zero after erntering binding state.
+			 * some 6rd relay router will drop the packet */
+			return 1;
+#endif
 		}
 #endif
 #endif
@@ -2863,14 +2886,6 @@ static void PpeSetFoeGloCfgEbl(uint32_t Ebl)
 	/* PPE Packet with TTL=0 */
 	RegModifyBits(PPE_GLO_CFG, DFL_TTL0_DRP, 4, 1);
 
-#if defined (CONFIG_RAETH_SPECIAL_TAG)
-	/* Set GDMA1 GDM1_TCI_81xx */
-	RegModifyBits(FE_GDMA1_FWD_CFG, 0x1, 24, 1);
-#ifdef CONFIG_RAETH_GMAC2
-	/* Set GDMA2 GDM2_TCI_81xx */
-	RegModifyBits(FE_GDMA2_FWD_CFG, 0x1, 24, 1);
-#endif
-#endif
 
     } else {
 #if defined (CONFIG_RALINK_MT7620)
@@ -2897,15 +2912,6 @@ static void PpeSetFoeGloCfgEbl(uint32_t Ebl)
 #else
 	/* PPE Engine Disable */
 	RegModifyBits(PPE_GLO_CFG, 0, 0, 1);
-#endif
-
-#if defined (CONFIG_RAETH_SPECIAL_TAG)
-	/* Remove GDMA1 GDM1_TCI_81xx */
-	RegModifyBits(FE_GDMA1_FWD_CFG, 0x0, 24, 1);
-#ifdef CONFIG_RAETH_GMAC2
-	/* Remove GDMA2 GDM2_TCI_81xx */
-	RegModifyBits(FE_GDMA2_FWD_CFG, 0x0, 24, 1);
-#endif
 #endif
     }
 
@@ -3493,7 +3499,7 @@ static void SetAclFwd(uint32_t Ebl)
 #else
 		WanInt = ra_dev_get_by_name("eth0.2");
 #endif
-
+		LanInt = ra_dev_get_by_name("br-lan");
 #else
 #if defined (CONFIG_RAETH_SPECIAL_TAG)
 #if defined (CONFIG_WAN_AT_P4)
@@ -3504,8 +3510,8 @@ static void SetAclFwd(uint32_t Ebl)
 #else
 		WanInt = ra_dev_get_by_name("eth2.2");
 #endif
-#endif
 		LanInt = ra_dev_get_by_name("br0");
+#endif
 		for(i = 0;i< 6;i++){
 			value = RegRead(RALINK_ETH_SW_BASE + 0x2004 + (i * 0x100));
 			value |= (0x1 << 10);

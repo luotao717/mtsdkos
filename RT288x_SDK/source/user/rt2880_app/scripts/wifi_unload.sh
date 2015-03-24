@@ -17,7 +17,8 @@
 . /sbin/global.sh
 
 kill_apps="udhcpd udhcpc syslogd klogd zebra ripd wscd rt2860apd rt61apd inadyn \
-iwevent stupid-ftpd smbd ated ntpclient lld2d igmpproxy dnsmasq telnetd miniupnpd"
+iwevent stupid-ftpd smbd ated ntpclient lld2d igmpproxy dnsmasq telnetd miniupnpd \
+long_loop"
 
 is_ra0_in_br0=`brctl show | sed -n '/ra0/p'`
 is_eth21_in_br0=`brctl show | sed -n '/eth2\.1/p'`
@@ -137,7 +138,6 @@ done
 # unload wifi driver
 if [ "$is_ra0_in_br0" == "" ]; then
 	unload_ra0
-	exit 1
 else
 	if [ "$is_usb0_in_br0" != "" ]; then
 		exit 1
@@ -147,6 +147,8 @@ else
 		br0_mirror=eth2.1
 	fi
     unload_ra0br0 $br0_mirror
-    
-	exit 1
 fi
+
+echo 3 > /proc/sys/vm/drop_caches
+sleep 1
+

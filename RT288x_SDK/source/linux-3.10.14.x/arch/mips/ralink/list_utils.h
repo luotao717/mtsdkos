@@ -33,10 +33,10 @@
 #ifdef DEBUG
 #define LIST_CHECK(x)	assert(((x)->prev->next == (x)) && ((x) == (x)->next->prev));
 #else
-#define LIST_CHECK(x)
+#define LIST_CHECK(x,y)	if(!x) return y;
 #endif
 
-
+#define LIST_CHECK_FLIST(x)	if(!x) return NULL;
 	
 
 /*******************************************************************************/

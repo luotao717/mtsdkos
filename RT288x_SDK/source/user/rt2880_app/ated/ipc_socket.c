@@ -157,7 +157,7 @@ int ipc_sock_close(void *dri_if)
 	} else {
 		kill(pid, SIGTERM);
 		ate_printf(MSG_INFO,"%d, wait child(%d)\n", getpid(), pid);
-		waitpid( pid ,status, 0);
+		waitpid( pid ,&status, 0);
 		ate_printf(MSG_INFO,"%d, child finish\n", getpid());
 	}
 

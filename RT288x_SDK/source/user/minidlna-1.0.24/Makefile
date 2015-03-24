@@ -26,11 +26,10 @@ CFLAGS += -Wall -g -O3 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
 	 -I$(ROOTDIR)/lib/libflac/include
 
 CFLAGS += -DSTATIC -DHAVE_CONFIG_H
-LDFLAGS =
 
 BASEOBJS = minidlna.o upnphttp.o upnpdescgen.o upnpsoap.o \
            upnpreplyparse.o minixml.o clients.o \
-           getifaddr.o process.o upnpglobalvars.o \
+           getifaddr.o upnpglobalvars.o daemonize.o \
            options.o minissdp.o uuid.o upnpevents.o \
            sql.o utils.o metadata.o scanner.o inotify.o \
            tivo_utils.o tivo_beacon.o tivo_commands.o \
@@ -60,7 +59,7 @@ romfs:	minidlna
 	$(ROMFSINST) /sbin/minidlna.sh
 
 minidlna:$(BASEOBJS) $(LNXOBJS)
-	$(CC) $(CFLAGS) -o $@ $(BASEOBJS) $(LNXOBJS) $(LIBS) -L$(ROOTDIR)/uClibc-0.9.33.2/lib -L$(ROOTDIR)/lib/lib
+	$(CC) $(CFLAGS) -o $@ $(BASEOBJS) $(LNXOBJS) $(LIBS) $(LDFLAGS)
 
 testupnpdescgen:$(TESTUPNPDESCGENOBJS)
 	$(CC) $(CFLAGS) -o $@ $(TESTUPNPDESCGENOBJS)

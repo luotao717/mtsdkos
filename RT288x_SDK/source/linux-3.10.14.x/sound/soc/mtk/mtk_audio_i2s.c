@@ -67,6 +67,7 @@ unsigned long i2sMaster_inclk_comp[11] = {64, 352, 42, 32, 176, 21, 272, 88, 10,
 #endif
 #else
 extern i2s_config_type* pi2s_config;
+static int g_openFlag = 0;
 #endif
 
 /****************************/
@@ -123,7 +124,7 @@ struct snd_soc_dai_driver mtk_audio_drv = {
 		.channels_max = 2,
 		.rates = (SNDRV_PCM_RATE_8000|SNDRV_PCM_RATE_11025|SNDRV_PCM_RATE_12000|\
 		SNDRV_PCM_RATE_16000|SNDRV_PCM_RATE_22050|SNDRV_PCM_RATE_24000|SNDRV_PCM_RATE_32000|\
-		SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000),
+		SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000|SNDRV_PCM_RATE_88200|SNDRV_PCM_RATE_96000),
 
 		.formats = (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
 				SNDRV_PCM_FMTBIT_S24_LE),
@@ -133,7 +134,7 @@ struct snd_soc_dai_driver mtk_audio_drv = {
 		.channels_max = 2,
 		.rates = (SNDRV_PCM_RATE_8000|SNDRV_PCM_RATE_11025|SNDRV_PCM_RATE_12000|\
 				SNDRV_PCM_RATE_16000|SNDRV_PCM_RATE_22050|SNDRV_PCM_RATE_24000|SNDRV_PCM_RATE_32000|\
-				SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000),
+				SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000|SNDRV_PCM_RATE_88200|SNDRV_PCM_RATE_96000),
 		.formats = (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
 				SNDRV_PCM_FMTBIT_S24_LE),
 	},
@@ -148,7 +149,7 @@ struct snd_soc_dai mtk_audio_drv_dai = {
 		.channels_max = 2,
 		.rates = (SNDRV_PCM_RATE_8000|SNDRV_PCM_RATE_11025|SNDRV_PCM_RATE_12000|\
 		SNDRV_PCM_RATE_16000|SNDRV_PCM_RATE_22050|SNDRV_PCM_RATE_24000|SNDRV_PCM_RATE_32000|\
-		SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000),
+		SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000|SNDRV_PCM_RATE_88200|SNDRV_PCM_RATE_96000),
 
 		.formats = (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
 				SNDRV_PCM_FMTBIT_S24_LE),
@@ -158,7 +159,7 @@ struct snd_soc_dai mtk_audio_drv_dai = {
 		.channels_max = 2,
 		.rates = (SNDRV_PCM_RATE_8000|SNDRV_PCM_RATE_11025|SNDRV_PCM_RATE_12000|\
 				SNDRV_PCM_RATE_16000|SNDRV_PCM_RATE_22050|SNDRV_PCM_RATE_24000|SNDRV_PCM_RATE_32000|\
-				SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000),
+				SNDRV_PCM_RATE_44100|SNDRV_PCM_RATE_48000|SNDRV_PCM_RATE_88200|SNDRV_PCM_RATE_96000),
 		.formats = (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
 				SNDRV_PCM_FMTBIT_S24_LE),
 	},
@@ -213,7 +214,7 @@ static int mtk_audio_drv_set_fmt(struct snd_soc_dai *cpu_dai,
 static int mtk_audio_drv_play_prepare(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
 	i2s_config_type* rtd = (i2s_config_type*)substream->runtime->private_data;
-	rtd->pss = substream;
+	rtd->pss[SNDRV_PCM_STREAM_PLAYBACK] = substream;
 	if(rtd->bTxDMAEnable != GDMA_I2S_EN){
 		i2s_reset_tx_param( rtd);
 		// rtd->bTxDMAEnable = 1;
@@ -237,7 +238,7 @@ static int mtk_audio_drv_play_prepare(struct snd_pcm_substream *substream, struc
 static int mtk_audio_drv_rec_prepare(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
 {
 	i2s_config_type* rtd = (i2s_config_type*)substream->runtime->private_data;
-	rtd->pss = substream;
+	rtd->pss[SNDRV_PCM_STREAM_CAPTURE] = substream;
 	if(rtd->bTxDMAEnable != GDMA_I2S_EN){
 	i2s_reset_rx_param(rtd);
 	//rtd->bRxDMAEnable = 1;
@@ -305,9 +306,14 @@ static int  mtk_audio_drv_startup(struct snd_pcm_substream *substream,
     init_waitqueue_head(&(pAudio_config->i2s_tx_qh));
     init_waitqueue_head(&(pAudio_config->i2s_rx_qh));
 #else
-    i2s_open(NULL,NULL);
-    if(!pi2s_config)
-    	return -1;
+    if(!g_openFlag){
+    	MSG("func: %s:LINE:%d \n",__func__,__LINE__);
+    	i2s_open(NULL,NULL);
+    	if(!pi2s_config)
+    		return -1;
+    	i2s_reset_config(pi2s_config);
+    	g_openFlag = 1;
+    }
 #endif
 	substream->runtime->private_data = pi2s_config;
 	return 0;
@@ -343,9 +349,10 @@ static int mtk_audio_hw_params(struct snd_pcm_substream *substream,\
 		break;
 	}
 	if(srate){
-		i2s_reset_config(rtd);
-		rtd->srate = srate;
-		MSG("set audio sampling rate to %d Hz\n", rtd->srate);
+		if((rtd->bRxDMAEnable != GDMA_I2S_EN) && (rtd->bTxDMAEnable != GDMA_I2S_EN)){
+			rtd->srate = srate;
+			MSG("set audio sampling rate to %d Hz\n", rtd->srate);
+		}
 	}
 
 	return 0;
@@ -362,8 +369,10 @@ static int mtk_audio_drv_hw_free(struct snd_pcm_substream *substream,struct snd_
 			//if (rtd->nTxDMAStopped<4)
 			//	interruptible_sleep_on(&(rtd->i2s_tx_qh));
 			i2s_tx_disable(rtd);
-			if((rtd->bRxDMAEnable==0)&&(rtd->bTxDMAEnable==0))
+			if((rtd->bRxDMAEnable==0)&&(rtd->bTxDMAEnable==0)){
 				i2s_clock_disable(rtd);
+				g_openFlag = 0;
+			}
 		//}
 	}
 	else{
@@ -374,8 +383,10 @@ static int mtk_audio_drv_hw_free(struct snd_pcm_substream *substream,struct snd_
 			//if(rtd->nRxDMAStopped<2)
 			//	interruptible_sleep_on(&(rtd->i2s_rx_qh));
 			i2s_rx_disable(rtd);
-			if((rtd->bRxDMAEnable==0)&&(rtd->bTxDMAEnable==0))
+			if((rtd->bRxDMAEnable==0)&&(rtd->bTxDMAEnable==0)){
 				i2s_clock_disable(rtd);
+				g_openFlag = 0;
+			}
 		//}
 	}
 	return 0;

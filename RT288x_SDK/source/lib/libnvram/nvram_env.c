@@ -28,7 +28,11 @@ static block_t fb[FLASH_BLOCK_NUM+EXTEND_BLOCK_NUM] =
 	{
 		.name = FB_2860_BLOCK_NAME,
 		.flash_offset =  0x2000,
+#ifdef CONFIG_CONFIG_SHRINK
+		.flash_max_len = ENV_BLK_SIZE*16,
+#else
 		.flash_max_len = ENV_BLK_SIZE*4,
+#endif
 		.valid = 0
 	},
 	{

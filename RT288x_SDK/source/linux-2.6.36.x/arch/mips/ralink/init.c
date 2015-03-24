@@ -232,6 +232,11 @@ static void prom_pcieinit(void)
 	val = (*((volatile u32 *)(RALINK_SYSCTL_BASE + 0x30)));
 	val &= ~(0x1<<26);
 	(*((volatile u32 *)(RALINK_SYSCTL_BASE + 0x30))) = val;
+
+#if !defined (CONFIG_PCI)
+	/* set  PCIe PHY to 1.3mA for power saving */
+	(*((volatile u32 *)(RALINK_PCI_BASE + 0x9000))) = 0x10;
+#endif
 }
 #else
 static void prom_pcieinit(void)

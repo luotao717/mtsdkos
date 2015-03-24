@@ -39,7 +39,7 @@ obj-$(CONFIG_RALINK_RT6855) +=  ehci_ohci.o udc.o
 obj-$(CONFIG_RALINK_MT7620) +=  ehci_ohci.o udc.o
 obj-$(CONFIG_RALINK_MT7628) +=  ehci_ohci.o udc.o
 
-#ifeq ($(CONFIG_CONFIG_SHRINK),y)
+ifeq ($(CONFIG_CONFIG_SHRINK),y)
 	EXTRA_CFLAGS += -DCONFIG_SHRINK #-DHT_DEBUG #-DHASH_STAT_DBG
 	obj-y += hash_utils.o #list_utils.o
-#endif
+endif

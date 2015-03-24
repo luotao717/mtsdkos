@@ -48,85 +48,14 @@ function checkValue(val)
 function initValue()
 {
   
-  	if(vogain_tx2 == "0"){
-			document.voip_phone2.voice_tx_level2.options.selectedIndex = 0;
-		}else if(vogain_tx2 == "1"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 1;
-    }else if(vogain_tx2 == "2"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 2;
-    }else if(vogain_tx2 == "3"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 3;
-    }else if(vogain_tx2 == "4"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 4;
-    }else if(vogain_tx2 == "5"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 5;
-    }else if(provision_enable2 == "6"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 6;
-    }else if(vogain_tx2 == "7"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 7;
-    }else if(vogain_tx2 == "8"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 8;
-    }else if(vogain_tx2 == "9"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 9;
-    }else if(vogain_tx2 == "10"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 10;
-    }else if(vogain_tx2 == "11"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 11;
-    }else if(vogain_tx2 == "12"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 12;
-    }else if(vogain_tx2 == "13"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 13;
-    }else if(vogain_tx2 == "14"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 14;
-    }else if(vogain_tx2 == "15"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 15;
-    }else if(vogain_tx2 == "16"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 16;
-    }else if(vogain_tx2 == "17"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 17;
-    }else if(vogain_tx2 == "18"){
-    	document.voip_phone2.voice_tx_level2.options.selectedIndex = 18;
-    }                                     
- 
-  	if(vogain_rx2 == "0"){
-			document.voip_phone2.voice_rx_level2.options.selectedIndex = 0;
-		}else if(vogain_rx2 == "1"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 1;
-    }else if(vogain_rx2 == "2"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 2;
-    }else if(vogain_rx2 == "3"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 3;
-    }else if(vogain_rx2 == "4"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 4;
-    }else if(vogain_rx2 == "5"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 5;
-    }else if(vogain_rx2 == "6"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 6;
-    }else if(vogain_rx2 == "7"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 7;
-    }else if(vogain_rx2 == "8"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 8;
-    }else if(vogain_rx2 == "9"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 9;
-    }else if(vogain_rx2 == "10"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 10;
-    }else if(vogain_rx2 == "11"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 11;
-    }else if(vogain_rx2 == "12"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 12;
-    }else if(vogain_rx2 == "13"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 13;
-    }else if(vogain_rx2 == "14"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 14;
-    }else if(vogain_rx2 == "15"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 15;
-    }else if(vogain_rx2 == "16"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 16;
-    }else if(vogain_rx2 == "17"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 17;
-    }else if(vogain_rx2 == "18"){
-    	document.voip_phone2.voice_rx_level2.options.selectedIndex = 18;
-    }   
+	var gtx = parseInt(vogain_tx2,10);
+	var grx = parseInt(vogain_rx2,10);
+
+	if((gtx <= 9) || (gtx >=-9))
+		document.voip_phone2.voice_tx_level2.options.selectedIndex = gtx+9;                            
+	
+	if((grx <= 9) || (grx >=-9))
+		document.voip_phone2.voice_rx_level2.options.selectedIndex = grx+9;                            
 
 		if(ring_impedance2 == "1"){
 			document.voip_phone2.ring_impedance2.options.selectedIndex = 0;
@@ -215,25 +144,25 @@ function initValue()
 	</td>
 	<td>
 	<select name="voice_tx_level2" size="1">
-	<option value=0 id="0">-9</option>
-	<option value=1 id="1">-8</option>
-	<option value=2 id="2">-7</option>
-	<option value=3 id="3">-6</option>
-	<option value=4 id="4">-5</option>
-	<option value=5 id="5">-4</option>
-	<option value=6 id="6">-3</option>
-	<option value=7 id="7">-2</option>
-	<option value=8 id="8">-1</option>
-	<option value=9 id="9">0</option>
-	<option value=10 id="10">1</option>
-	<option value=11 id="11">2</option>
-	<option value=12 id="12">3</option>
-	<option value=13 id="13">4</option>
-	<option value=14 id="14">5</option>
-	<option value=15 id="15">6</option>
-	<option value=16 id="16">7</option>
-	<option value=17 id="17">8</option>	
-	<option value=18 id="18">9</option>	
+	<option value="-9">-9</option>
+	<option value="-8">-8</option>
+	<option value="-7">-7</option>
+	<option value="-6">-6</option>
+	<option value="-5">-5</option>
+	<option value="-4">-4</option>
+	<option value="-3">-3</option>
+	<option value="-2">-2</option>
+	<option value="-1">-1</option>
+	<option value="0">0</option>
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="4">4</option>
+	<option value="5">5</option>
+	<option value="6">6</option>
+	<option value="7">7</option>
+	<option value="8">8</option>	
+	<option value="9">9</option>	
 	</select>
 	</td>
 </tr>
@@ -244,25 +173,25 @@ function initValue()
 	</td>
 	<td>
 	<select name="voice_rx_level2" size="1">
-	<option value=0 id="0">-9</option>
-	<option value=1 id="1">-8</option>
-	<option value=2 id="2">-7</option>
-	<option value=3 id="3">-6</option>
-	<option value=4 id="4">-5</option>
-	<option value=5 id="5">-4</option>
-	<option value=6 id="6">-3</option>
-	<option value=7 id="7">-2</option>
-	<option value=8 id="8">-1</option>
-	<option value=9 id="9">0</option>
-	<option value=10 id="10">1</option>
-	<option value=11 id="11">2</option>
-	<option value=12 id="12">3</option>
-	<option value=13 id="13">4</option>
-	<option value=14 id="14">5</option>
-	<option value=15 id="15">6</option>
-	<option value=16 id="16">7</option>
-	<option value=17 id="17">8</option>	
-	<option value=18 id="18">9</option>	
+	<option value="-9">-9</option>
+	<option value="-8">-8</option>
+	<option value="-7">-7</option>
+	<option value="-6">-6</option>
+	<option value="-5">-5</option>
+	<option value="-4">-4</option>
+	<option value="-3">-3</option>
+	<option value="-2">-2</option>
+	<option value="-1">-1</option>
+	<option value="0">0</option>
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="4">4</option>
+	<option value="5">5</option>
+	<option value="6">6</option>
+	<option value="7">7</option>
+	<option value="8">8</option>	
+	<option value="9">9</option>	
 	</select>
 	</td>
 </tr>

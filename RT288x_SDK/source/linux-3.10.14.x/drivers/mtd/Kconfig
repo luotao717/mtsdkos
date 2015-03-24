@@ -12,6 +12,7 @@ menuconfig MTD
 
 if MTD
 
+if SUPPORT_OPENWRT
 menu "OpenWrt specific MTD options"
 
 config MTD_ROOTFS_ROOT_DEV
@@ -72,6 +73,7 @@ config MTD_SPLIT
           Generic MTD split support.
 
 endmenu
+endif # SUPPORT_OPENWRT
 config MTD_TESTS
 	tristate "MTD tests support (DANGEROUS)"
 	depends on m

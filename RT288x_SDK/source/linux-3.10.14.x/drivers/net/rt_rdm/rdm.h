@@ -21,9 +21,6 @@
 
 #define RDM_SYSCTL_ADDR			RALINK_SYSCTL_BASE // system control
 
-int rdm_open(struct inode *inode, struct file *filp);
-int rdm_release(struct inode *inode, struct file *filp);
-
 #define RT_RDM_CMD_SHOW			0x6B01
 #define RT_RDM_CMD_WRITE		0x6B02
 #define RT_RDM_CMD_READ			0x6B03

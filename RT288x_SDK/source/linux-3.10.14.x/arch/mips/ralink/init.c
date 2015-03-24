@@ -218,6 +218,26 @@ static void prom_pcieinit(void)
 	}
 
 }
+#elif defined (CONFIG_RALINK_MT7628)
+static void prom_pcieinit(void)
+{
+	u32 val;
+
+	/* aseert PCIe RC RST */
+	val = (*((volatile u32 *)(RALINK_SYSCTL_BASE + 0x34)));
+	val |= (0x1<<26);
+	(*((volatile u32 *)(RALINK_SYSCTL_BASE + 0x34))) = val;
+
+	/* disable PCIe clock */
+	val = (*((volatile u32 *)(RALINK_SYSCTL_BASE + 0x30)));
+	val &= ~(0x1<<26);
+	(*((volatile u32 *)(RALINK_SYSCTL_BASE + 0x30))) = val;
+
+#if !defined (CONFIG_PCI)
+	/* set  PCIe PHY to 1.3mA for power saving */
+	(*((volatile u32 *)(RALINK_PCI_BASE + 0x9000))) = 0x10;
+#endif
+}
 #else /* CONFIG_RALINK_MT7620 */
 static void prom_pcieinit(void)
 {

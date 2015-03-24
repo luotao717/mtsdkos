@@ -772,6 +772,8 @@ dist-hook:
 test_app:
 	$(CC) -I$(ROOTDIR)/user/alsa-lib-1.0.27.2/alsa_install/include -L$(ROOTDIR)/user/alsa-lib-1.0.27.2/alsa_install/lib -lasound tmptest/playback.c -o pb -lm -lasound -lm -ldl -lpthread
 	$(CC) -I$(ROOTDIR)/user/alsa-lib-1.0.27.2/alsa_install/include -L$(ROOTDIR)/user/alsa-lib-1.0.27.2/alsa_install/lib -lasound tmptest/cap.c -o capt -lm -lasound -lm -ldl -lpthread
+	$(CC) -I$(ROOTDIR)/user/alsa-lib-1.0.27.2/alsa_install/include -L$(ROOTDIR)/user/alsa-lib-1.0.27.2/alsa_install/lib -lasound tmptest/duplex.c -o dul -lm -lasound -lm -ldl -lpthread
+	
 
 doc-dummy:
 

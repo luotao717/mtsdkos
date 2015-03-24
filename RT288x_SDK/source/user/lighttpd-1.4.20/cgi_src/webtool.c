@@ -8,7 +8,7 @@
 #include <linux/wireless.h>
 #include "oid.h"
 #include "user_conf.h"
-#if defined CONFIG_GDMA_EVERYBODY && defined CONFIG_RALINK_PCMGPIO
+#if defined CONFIG_MTK_VOIP
 #include "openssl/pem.h"
 #include "openssl/x509.h"
 #include "openssl/evp.h"
@@ -79,13 +79,23 @@ int ap_oid_query_info(unsigned long OidQueryCode, int socket_id, char *DeviceNam
  */
 void WebNvramGet(char *argv[])
 {
-	char *key, tmp[1024], *p;
+	char *key, tmp[1024], *p, *block_name;
 	const char *value;
 	int nvram_id;
 
 	key = argv[3];
 
-	if ((nvram_id = getNvramIndex(argv[1])) == -1) {
+	if ((!strcmp(argv[1], "voip")) || (!strcmp(argv[1], "tr069")) || (!strcmp(argv[1], "config2")) ){
+#if defined CONFIG_CONFIG_SHRINK
+		block_name = FB_2860_BLOCK_NAME;
+#else
+		block_name = FB_CONFIG2_BLOCK_NAME;
+#endif
+	}
+	else{
+		block_name = argv[1];
+	}
+	if ((nvram_id = getNvramIndex(block_name)) == -1) {
 		DBG_MSG("%s: Error: \"%s\" flash zone not existed", argv[0], argv[1]);
 		get_usage(argv[0]);
 		return;
@@ -405,7 +415,7 @@ void WebBuildGet(char *argv[])
 	if (!strcmp(argv[3], "media"))
 		build = 1;
 #endif
-#if defined CONFIG_GDMA_EVERYBODY && defined CONFIG_RALINK_PCMGPIO 
+#if defined CONFIG_MTK_VOIP
   if (!strcmp(argv[3], "voip"))
 		build = 1;
 #endif
@@ -2707,15 +2717,15 @@ void GetPortForwardRule(void)
 	}
 	nvram_close(RT2860_NVRAM);
 }
-#if defined CONFIG_GDMA_EVERYBODY && defined CONFIG_RALINK_PCMGPIO
+#if defined CONFIG_MTK_VOIP
 void GetVoipDialRule(void)
 {
 	int i=0;
 	char rec[256];
 	int shortNumber_int, realNumber_int, dialActive_int;
 	char shortNumber[10], realNumber[10], dialActive[6], note[16];
-		nvram_init(CONFIG2_NVRAM);
-	char *rules = (char *)nvram_bufget(CONFIG2_NVRAM, "VoipDialRules");
+		nvram_init(VOIP_NVRAM);
+	char *rules = (char *)nvram_bufget(VOIP_NVRAM, "VoipDialRules");
 	if(!rules)
 		return;
 	if(!strlen(rules))
@@ -2764,7 +2774,7 @@ void GetVoipDialRule(void)
    		printf("</tr>\n");
    	}
   }	
-  	nvram_close(CONFIG2_NVRAM);	
+  	nvram_close(VOIP_NVRAM);	
 }
 void GetVoipDialRule2(void)
 {
@@ -2772,8 +2782,8 @@ void GetVoipDialRule2(void)
 	char rec[256];
 	int shortNumber_int, realNumber_int, dialActive_int;
 	char shortNumber[10], realNumber[10], dialActive[6], note[16];
-			nvram_init(CONFIG2_NVRAM);
-	char *rules = (char *)nvram_bufget(CONFIG2_NVRAM, "VoipDialRules2");
+			nvram_init(VOIP_NVRAM);
+	char *rules = (char *)nvram_bufget(VOIP_NVRAM, "VoipDialRules2");
 	if(!rules)
 		return;
 	if(!strlen(rules))
@@ -2822,7 +2832,7 @@ void GetVoipDialRule2(void)
    		printf("</tr>\n");
    	}
   }		
-  nvram_close(CONFIG2_NVRAM);
+  nvram_close(VOIP_NVRAM);
 }
 #endif
 void GetPortTriggerRule(void)
@@ -3088,33 +3098,33 @@ void GetLayer7FilterName(void)
 	//websLongWrite(wp, l7name);
 	printf("%s",l7name);
 }
-#if defined CONFIG_GDMA_EVERYBODY && defined CONFIG_RALINK_PCMGPIO
+#if defined CONFIG_MTK_VOIP
 void GetStunStatus(void){
 		char *value;
-		nvram_init(CONFIG2_NVRAM);
+		nvram_init(VOIP_NVRAM);
 	
-		value = nvram_bufget(CONFIG2_NVRAM, "SC_ACCT_1_NAT_SRV_ADDR");
+		value = nvram_bufget(VOIP_NVRAM, "SC_ACCT_1_NAT_SRV_ADDR");
 
 		if(strcmp(value, "")!=0){
 			printf("Enable");
 		}else{
 	    printf("Disable");
 		}
-	nvram_close(CONFIG2_NVRAM);
+	nvram_close(VOIP_NVRAM);
 	
 }
 void GetStunStatus2(void){
 		char *value;
-		nvram_init(CONFIG2_NVRAM);
+		nvram_init(VOIP_NVRAM);
 	
-		value = nvram_bufget(CONFIG2_NVRAM, "SC_ACCT_2_NAT_SRV_ADDR");
+		value = nvram_bufget(VOIP_NVRAM, "SC_ACCT_2_NAT_SRV_ADDR");
 
 		if(strcmp(value, "")!=0){
 			printf("Enable");
 		}else{
 	    printf("Disable");
 		}
-	nvram_close(CONFIG2_NVRAM);
+	nvram_close(VOIP_NVRAM);
 	
 }
 
@@ -3145,7 +3155,7 @@ void getCertInfo(char *name)
 	sprintf(filename,"/etc/%s.pem", name);
 	FILE *fp=fopen(filename,"r");
 
-  nvram_init(TR069CERT_NVRAM);
+  nvram_init(VOIP_NVRAM);
   size = 256;
 	buf = malloc(size);
 
@@ -3233,8 +3243,8 @@ void getCertInfo(char *name)
 	if (is_load) 
 		unlink(filename);
 	
-	nvram_commit(TR069CERT_NVRAM);
-	nvram_close(TR069CERT_NVRAM);
+	nvram_commit(VOIP_NVRAM);
+	nvram_close(VOIP_NVRAM);
 	#endif
 }
 
@@ -3314,7 +3324,7 @@ int main(int argc, char *argv[])
 		cmd = CMD_FIREWALL_GET;
 	else if (!strncmp(argv[2], "test", 6))
 		cmd = CMD_TEST_GET;
-#if defined CONFIG_GDMA_EVERYBODY && defined CONFIG_RALINK_PCMGPIO
+#if defined CONFIG_MTK_VOIP
 	else if (!strncmp(argv[2], "voip", 5))
 		cmd = CMD_VOIP_GET;
 	else if (!strncmp(argv[2], "tr069", 5))
@@ -3343,7 +3353,7 @@ int main(int argc, char *argv[])
 	case CMD_FIREWALL_GET:
 		WebFirewallGet(argv);
 		break;
-#if defined CONFIG_GDMA_EVERYBODY && defined CONFIG_RALINK_PCMGPIO
+#if defined CONFIG_MTK_VOIP
 	case CMD_VOIP_GET:
 		WebVoipGet(argv);
 		break;

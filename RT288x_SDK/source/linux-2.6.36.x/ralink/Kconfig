@@ -114,6 +114,13 @@ choice
 	depends on RALINK_MT7621
 	select MT_MAC
 	select RALINK_MT7603E
+
+	config FIRST_IF_MT7637E
+	bool "MT7637E"
+	select WIFI_MT_MAC
+	select MT_MAC
+	select RALINK_MT7637E
+
 endchoice
 
 choice
@@ -203,9 +210,10 @@ config  RT_FIRST_CARD
         default 5592 if FIRST_IF_RT5592
         default 3593 if FIRST_IF_RT3593
         default 7610 if FIRST_IF_MT7610E
-	default 7612e if FIRST_IF_MT7612E
-	default 7602e if FIRST_IF_MT7602E
-	default 7603e if FIRST_IF_MT7603E
+	default 7612 if FIRST_IF_MT7612E
+	default 7602 if FIRST_IF_MT7602E
+	default 7603 if FIRST_IF_MT7603E
+	default 7637 if FIRST_IF_MT7637E
         
 config  RT_SECOND_CARD
         int
@@ -218,10 +226,9 @@ config  RT_SECOND_CARD
         default 8592 if SECOND_IF_RT8592
         default 3572 if SECOND_IF_RT3572
         default 5572 if SECOND_IF_RT5572
-	default 7612e if SECOND_IF_MT7612E
-	default 7612u if SECOND_IF_MT7612U
-	default 7602e if SECOND_IF_MT7602E
-	default 7603e if SECOND_IF_MT7603E
+	default 7612 if SECOND_IF_MT7612E || SECOND_IF_MT7612U
+	default 7602 if SECOND_IF_MT7602E
+	default 7603 if SECOND_IF_MT7603E
         
 config  RT_FIRST_IF_RF_OFFSET
         hex
@@ -305,6 +312,7 @@ config RTDEV_MII
 #source "drivers/net/wireless/RT3680_ap/Kconfig"
 #source "drivers/net/wireless/MT7610_ap/Kconfig"
 #source "drivers/net/wireless/rlt_wifi/Kconfig"
+#source "drivers/net/wireless/mt_wifi/Kconfig"
 #source "drivers/net/wireless/mt_wifi/embedded/Kconfig"
 
 endif # WIFI_DRIVER
