@@ -1,4 +1,7 @@
 #
+SHELL:=/bin/bash
+#
+#
 #	Makefile -- Build instructions for user level apps
 #
 

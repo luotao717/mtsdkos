@@ -261,11 +261,6 @@ define_bool CONFIG_LIB_RESOLV_FORCE $CONFIG_USER_OPENSWAN
 fi
 
 bool 'p910nd (small printer daemon)'            CONFIG_USER_P910ND
-bool 'parprouted (Proxy ARP)'	CONFIG_USER_PARPROUTED
-if [ "$CONFIG_USER_PARPROUTED" = "y" ]; then
-	define_bool CONFIG_USER_IPROUTE2 y
-	define_bool CONFIG_USER_IPROUTE2_IP y
-fi
 bool 'pppd'					CONFIG_USER_PPPD
 dep_bool '  pppoe client'                       CONFIG_USER_PPPD_WITH_PPPOE $CONFIG_USER_PPPD
 dep_bool '  l2tp client'                        CONFIG_USER_PPPD_WITH_L2TP $CONFIG_USER_PPPD
@@ -298,7 +293,6 @@ fi
 
 bool 'snmpd(v1)'				CONFIG_USER_SNMPD
 
-bool 'totd (DNS proxy)'				CONFIG_USER_TOTD
 bool 'uvc_stream'				CONFIG_USER_UVC_STREAM
 bool 'linux-igd'				CONFIG_USER_UPNP_IGD
 bool 'wpa-supplicant'				CONFIG_USER_WPA_SUPPLICANT
@@ -333,10 +327,6 @@ comment 'Miscellaneous Applications'
 
 bool 'busybox'                  CONFIG_USER_BUSYBOX_BUSYBOX
 bool 'bonnie++'			CONFIG_USER_BONNIE
-bool 'cachebench'		CONFIG_USER_CACHEBENCH
-if [ "$CONFIG_USER_CACHEBENCH" = "y" ]; then
-	define_bool CONFIG_LIB_RT_FORCE y
-fi
 bool 'ethtool'			CONFIG_USER_ETHTOOL
 bool 'dhrystone'		CONFIG_DHRYSTONE
 bool 'dhcpfwd'			CONFIG_DHCPFWD
@@ -353,11 +343,8 @@ if [ "$CONFIG_USER_IPERF" = "y" ]; then
 	define_bool CONFIG_LIB_LIBM_FORCE y
 fi
 bool 'i2c-tools'		CONFIG_USER_I2C_TOOLS
-bool 'lmbench'			CONFIG_USER_LMBENCH3
 bool 'mtd write'		CONFIG_USER_MTD_WRITE
 bool 'mpstat'			CONFIG_USER_MPSTAT
-bool 'nbench'                   CONFIG_USER_NBENCH
-bool 'netcat'                   CONFIG_USER_NETCAT
 bool 'netstat-nat'              CONFIG_USER_NETSTAT_NAT
 bool 'ntfs-3g'			CONFIG_USER_NTFS3G
 bool 'ntfsprogs'		CONFIG_USER_NTFSPROGS
@@ -459,7 +446,6 @@ fi
 bool 'PCI-E PHY Command'        CONFIG_RALINKAPP_PCIE_PHY
 bool 'Video Flow Classification Command'        CONFIG_RALINKAPP_CLS
 bool 'Configuration Scripts'	CONFIG_RALINKAPP_SCRIPTS
-bool 'Bus Arbiter'              CONFIG_RALINKAPP_BUSARB
 bool 'Eth Phy Tester'           CONFIG_RALINKAPP_ETHPHY
 bool 'Kprofile'			CONFIG_RALINKAPP_KPROFILE
 bool 'NFC Service Daemon'	CONFIG_USER_NFCSD

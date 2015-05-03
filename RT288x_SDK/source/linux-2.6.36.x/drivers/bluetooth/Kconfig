@@ -207,13 +207,6 @@ config BT_MRVL_SDIO
 	  Say Y here to compile support for Marvell BT-over-SDIO driver
 	  into the kernel or say M to compile it as module.
 
-config BT_MTK_HCI_USB
-	tristate "MTK BT-over-USB drvier"
-	depends on USB
-	select FW_LOADER
-	help
-	  Make by iverson for testing.
-
 config BT_ATH3K
 	tristate "Atheros firmware download driver"
 	depends on BT_HCIBTUSB

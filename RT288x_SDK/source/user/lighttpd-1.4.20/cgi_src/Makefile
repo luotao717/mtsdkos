@@ -1,5 +1,8 @@
+#
+SHELL:=/bin/bash
+#
 CFLAGS += -I$(ROOTDIR)/lib/libnvram
-ifeq ($(CONFIG_MTK_VOIP), y)
+ifeq ($(shell [[ "$(CONFIG_MTK_VOIP)" == "y" || "$(CONFIG_MTK_TR069)" == "y" ]] && echo true), true)
 CFLAGS += -I$(ROOTDIR)/user/openssl-0.9.8e/include
 endif
 ifeq ($(CONFIG_WSC_INCLUDED), y)
@@ -124,13 +127,13 @@ LDFLAGS += -L$(ROOTDIR)/lib/libnvram -L.
 LDFLAGS += -L$(ROOTDIR)/user/openssl-0.9.8e -L.
 LDNVRAMLIB += -lnvram 
 LDWEBLIB += -lwebutil
-ifeq ($(CONFIG_MTK_VOIP), y)
+ifeq ($(shell [[ "$(CONFIG_MTK_VOIP)" == "y" || "$(CONFIG_MTK_TR069)" == "y" ]] && echo true), true)
 LDWEBLIB += -lcrypto -lssl
 endif
 
 GET_CGI = web
 SET_CGI = internet.cgi wireless.cgi makeRequest.cgi firewall.cgi adm.cgi
-ifeq ($(CONFIG_MTK_VOIP), y)
+ifeq ($(shell [[ "$(CONFIG_MTK_VOIP)" == "y" || "$(CONFIG_MTK_TR069)" == "y" ]] && echo true), true)
 SET_CGI += voip.cgi tr069.cgi tr069upload_ca.cgi tr069upload_cc.cgi
 endif
 ifneq ($(findstring y, $(CONFIG_RALINKAPP_SWQOS)$(CONFIG_RALINKAPP_HWQOS)),)
